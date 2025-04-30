@@ -1,0 +1,108 @@
+.product-image {
+    width: 100%;
+    max-width: 150px; /* Imagen ampliada */
+    height: auto;
+    border-radius: 8px;
+  }
+  /* Estilo base para botones minimalistas */
+  .minimalist-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .minimalist-button:hover {
+    background-color: #555;
+    transform: scale(1.05);
+  }
+  /* Estilos para la tabla minimalista */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  .table th, .table td {
+    vertical-align: middle;
+    padding: 12px 15px;
+    border: none;
+  }
+  .table thead {
+    background-color: #f1f1f1;
+  }
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+  }
+  /* Estilos para la columna de selección */
+  .table thead th.select-col,
+  .table tbody td.select-col {
+    text-align: center;
+    width: 80px;
+  }
+  .select-product {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+  /* Botón "Seguir Comprando" en estilo minimalista, gris y ovalado */
+  .seguir-comprando-btn {
+    background-color: #6c757d;  /* Gris */
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;  /* Forma ovalada */
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+  }
+  .seguir-comprando-btn:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+  }
+  /* Estilo para el contenedor de total seleccionado */
+  .total-selected-wrapper {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  .total-selected-wrapper:hover {
+    background-color: #0b5ed7;
+    transform: scale(1.02);
+  }
+
+  .header, .footer {
+    background-color: #007bff; /* Azul para el encabezado y pie */
+    color: #fff; /* Texto blanco */
+    padding: 16px; /* Espaciado interno */
+    text-align: center; /* Alineación centrada */
+  }
+  .header a, .footer a {
+    margin: 0 8px; /* Espaciado entre enlaces */
+    text-decoration: none; /* Sin subrayado */
+    color: #fff; /* Texto blanco */
+  }
+  .header a:hover, .footer a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+  }
+  

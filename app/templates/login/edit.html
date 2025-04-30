@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Editar Usuario</title>
+</head>
+<body>
+    <h1>Editar Usuario</h1>
+    <form action="{{ url_for('auth.edit', id=user.idUser) }}" method="post">
+        <label for="nameUser">Nombre:</label>
+        <input type="text" id="nameUser" name="nameUser" value="{{ user.nameUser }}" required>
+
+        <label for="passwordUser">Contraseña:</label>
+        <input type="password" id="passwordUser" name="passwordUser" value="{{ user.passwordUser }}" required>
+
+        {% if current_user.idUser == 1 %}
+        <label for="rolUser">Rol:</label>
+        <select name="rolUser" id="rolUser">
+            <option value="cliente" {% if user.rolUser == 'cliente' %} selected {% endif %}>Cliente</option>
+            <option value="administrador" {% if user.rolUser == 'administrador' %} selected {% endif %}>Administrador</option>
+        </select>
+        {% endif %}
+
+        <button type="submit">Actualizar Usuario</button>
+        <a href="{{ url_for('auth.dashboard') }}" id="enlace">Regresar</a>
+    </form>
+</body>
+</html>

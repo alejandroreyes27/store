@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="col-md-6 offset-md-3">
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}             
+                    {% for category, message in messages %}
+                        <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('auth.login') }}">
+            <div class="form-group">
+                <label for="nameUser">Username</label>
+                <input type="text" name="nameUser" id="nameUser" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passwordUser">Password</label>
+                <input type="password" name="passwordUser" id="passwordUser" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a href="auth/add" class="add-user-link">
+              <i class="material-icons" style="font-size:36px">person_add</i>
+            </a>
+
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

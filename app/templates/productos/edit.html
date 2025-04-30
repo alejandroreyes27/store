@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='productos/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
+</head>
+<body>
+
+    <div class="w3-container w3-padding-32">
+        <h2 class="w3-center">Editar Producto</h2>
+    
+        <!-- IMPORTANTE: enctype para subir archivos -->
+        <form class="w3-container w3-card-4 w3-light-grey w3-padding-32" method="POST" enctype="multipart/form-data">
+    
+            <!-- Nombre del Producto -->
+            <label class="w3-text-blue"><b>Nombre</b></label>
+            <input class="w3-input w3-border" type="text" name="nombreProducto" value="{{ producto.nombreProducto }}" required>
+    
+            <!-- Descripción del Producto -->
+            <label class="w3-text-blue"><b>Descripción</b></label>
+            <textarea class="w3-input w3-border" name="descripcionProducto" rows="4" required>{{ producto.descripcionProducto }}</textarea>
+    
+            <!-- Precio del Producto -->
+            <label class="w3-text-blue"><b>Precio</b></label>
+            <input class="w3-input w3-border" type="number" name="precioProducto" step="0.01" value="{{ producto.precioProducto }}" required>
+    
+            <!-- Stock del Producto -->
+            <label class="w3-text-blue"><b>Stock</b></label>
+            <input class="w3-input w3-border" type="number" name="stock" value="{{ producto.stock }}" required>
+    
+            <!-- Categoría del Producto -->
+            <label class="w3-text-blue"><b>Categoría</b></label>
+            <select class="w3-select w3-border" name="categoria" required>
+                <option value="" disabled {% if not producto.idCategoria %}selected{% endif %}>Selecciona una categoría</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.idCategoria }}" {% if producto.idCategoria == categoria.idCategoria %}selected{% endif %}>
+                    {{ categoria.nombreCategoria }}
+                </option>
+                {% endfor %}
+            </select>
+    
+            <!-- Imagen Actual del Producto -->
+            <label class="w3-text-blue"><b>Imagen Actual</b></label>
+            <div>
+                {% if producto.imagenProducto %}
+                <img src="{{ url_for('static', filename=producto.imagenProducto) }}" alt="Imagen actual" style="max-width: 150px;">
+                {% else %}
+                <p>No hay imagen cargada.</p>
+                {% endif %}
+            </div>
+    
+            <!-- Nueva Imagen del Producto -->
+            <label class="w3-text-blue"><b>Nueva Imagen</b></label>
+            <input class="w3-input w3-border" type="file" name="imagenProducto">
+    
+            <!-- Botones de Acción -->
+            <button class="w3-button w3-blue w3-margin-top" type="submit">Guardar Cambios</button>
+            <a href="{{ url_for('productos.index') }}" class="w3-button w3-grey w3-margin-top">Volver</a>
+    
+        </form>
+    </div>
+</body>
+</html>

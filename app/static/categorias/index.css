@@ -1,0 +1,14 @@
+.table thead {
+    background-color: #343a40;
+    color: white;
+}
+.btn-group-custom {
+    display: flex;
+    gap: 10px;
+}
+.container-custom {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
