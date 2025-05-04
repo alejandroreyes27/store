@@ -361,7 +361,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Producto agregado al carrito exitosamente.');
                         bootstrap.Modal.getInstance(modal).hide(); // Cerrar el modal
                     } else {
                         alert('Error al agregar el producto al carrito.');
