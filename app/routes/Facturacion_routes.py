@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 from app import db
 from app.models.Factura import Factura
@@ -15,6 +15,52 @@ from reportlab.lib.styles import ParagraphStyle
 import base64
 
 bp = Blueprint('facturacion', __name__, url_prefix='/facturacion')
+
+@bp.route('/facturas')
+@login_required
+def facturas_index():
+    # Solo administradores pueden entrar
+    if current_user.rolUser != 'administrador':
+        flash('Acceso denegado.', 'warning')
+        return redirect(url_for('productos.index'))
+    
+    # Obtener todas las facturas, ordenadas por fecha (más recientes primero)
+    facturas = Factura.query.order_by(Factura.date_created.desc()).all()
+    # También el conteo de no revisadas
+    pendientes = Factura.query.filter_by(revisada=False).count()
+    
+    return render_template('facturacion/index.html',
+                           facturas=facturas,
+                           pendientes=pendientes)
+    
+@bp.route('/facturas/<int:id>')
+@login_required
+def ver(id):
+    # Sólo admin
+    if current_user.rolUser != 'administrador':
+        flash('Acceso denegado.', 'warning')
+        return redirect(url_for('productos.index'))
+
+    factura = Factura.query.get_or_404(id)
+    detalles = factura.detalles  # lista de DetalleFactura
+
+    return render_template('facturacion/ver.html',
+                        factura=factura,
+                        detalles=detalles)
+    
+@bp.route('/facturas/<int:id>/marcar')
+@login_required
+def marcar_revisada(id):
+    if current_user.rolUser != 'administrador':
+        flash('Acceso denegado.', 'warning')
+        return redirect(url_for('productos.index'))
+
+    factura = Factura.query.get_or_404(id)
+    factura.revisada = True
+    db.session.commit()
+    flash(f'Factura {factura.id} marcada como revisada.', 'success')
+    return redirect(url_for('facturacion.facturas_index'))
+
 
 def generar_factura_pdf(datos):
     buffer = BytesIO()

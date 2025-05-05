@@ -16,6 +16,19 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
+    # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+    # Context processor para contar facturas pendientes
+    from flask_login import current_user
+    from app.models.Factura import Factura
+
+    @app.context_processor
+    def inject_pending_facturas():
+        pendientes = 0
+        if current_user.is_authenticated and current_user.rolUser == 'administrador':
+            pendientes = Factura.query.filter_by(revisada=False).count()
+        return dict(pendientes_facturas=pendientes)
+    # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
     @login_manager.user_loader
     def load_user(idUser):
         from app.models.users import Users
@@ -43,4 +56,5 @@ def create_app():
         app.register_blueprint(carrito_bp)
         app.register_blueprint(categoria_bp)
         app.register_blueprint(facturacion_bp)
+
     return app

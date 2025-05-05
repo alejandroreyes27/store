@@ -25,14 +25,23 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
                     </li>
-                    {% if current_user.rolUser == 'administrador': %}
+                    {% if current_user.rolUser == 'administrador' %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="material-icons">account_circle</i>
+                            <i class="material-icons">account_circle</i>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
+                            <li>
+                                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                href="{{ url_for('facturacion.facturas_index') }}">
+                                Facturas
+                                {% if pendientes_facturas > 0 %}
+                                    <span class="badge bg-danger">{{ pendientes_facturas }}</span>
+                                {% endif %}
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
                             </ul>
                         </li>
                     {% endif %}
