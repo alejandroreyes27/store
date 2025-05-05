@@ -20,12 +20,16 @@ def generar_factura_pdf(datos):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
     styles = getSampleStyleSheet()
+    
+    # Estilos personalizados
     style_normal = styles['Normal']
     style_normal.fontName = 'Helvetica'
     style_normal.fontSize = 10
+    
     style_title = styles['Title']
     style_title.fontName = 'Helvetica-Bold'
     style_title.fontSize = 14
+    
     style_heading = styles['Heading3']
     style_heading.fontName = 'Helvetica-Bold'
     style_heading.fontSize = 12
@@ -40,7 +44,9 @@ def generar_factura_pdf(datos):
     except:
         pass
 
-    story.append(Paragraph("Zapatería Estilo S.A.", style_title))
+    # Información de la empresa
+    story.append(Paragraph("Zapatería Estilo S.A.", 
+                          ParagraphStyle('Company', parent=style_title, textColor=colors.HexColor("#1f6fcb"))))
     story.append(Spacer(1, 12))
     story.append(Paragraph("Av. Principal 456, Ciudad Moda", style_normal))
     story.append(Paragraph("Tel: 555-7890 | Email: info@zapateriaestilo.com", style_normal))
@@ -68,28 +74,52 @@ def generar_factura_pdf(datos):
     ]
     table = Table(table_data, colWidths=[250, 60, 100, 100])
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f8f9fa")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor("#212529")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1f6fcb")),  # Azul principal de la marca
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0,0), (-1,0), 12),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#ffffff")),
+        ('FONTSIZE', (0,0), (-1,0), 12),
+        ('BOTTOMPADDING', (0,0), (-1,0), 15),
+        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#f8f9fa")),
         ('GRID', (0,0), (-1,-1), 1, colors.HexColor("#dee2e6")),
-        ('FONTSIZE', (0,0), (-1,-1), 10),
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE')
+        ('FONTSIZE', (0,1), (-1,-1), 10),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),  # Alinear texto a la izquierda
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#1f6fcb")),  # Bordes más visibles
     ]))
     story.append(table)
-    story.append(Spacer(1, 24))
+    story.append(Spacer(1, 30))
 
-    # Totales y notas finales
-    total_style = ParagraphStyle(name='Total', fontSize=12, fontName='Helvetica-Bold', alignment=1)
-    story.append(Paragraph(f"Subtotal: $ {datos['subtotal']:,.0f}".replace(",", "."), total_style))
-    story.append(Paragraph(f"IVA (16%): $ {datos['iva']:,.0f}".replace(",", "."), total_style))
-    story.append(Paragraph(f"Total: $ {datos['total']:,.0f}".replace(",", "."), total_style))
-    story.append(Spacer(1, 24))
-    story.append(Paragraph("¡Gracias por su compra!", style_normal))
-    story.append(Paragraph("Política de devolución: 30 días con recibo.", style_normal))
-    story.append(Paragraph("www.zapateriaestilo.com", style_normal))
+    # Totales con estilo mejorado
+    total_data = [["Total:", f"$ {datos['subtotal']:,.0f}".replace(",", ".")]]
+    total_table = Table(total_data, colWidths=[300, 150])
+    total_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f8f9fa")),
+        ('ALIGN', (0,0), (-1,-1), 'RIGHT'),
+        ('FONTNAME', (0,0), (-1,-1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,-1), 14),
+        ('TEXTCOLOR', (0,0), (-1,-1), colors.HexColor("#1f6fcb")),
+        ('TOPPADDING', (0,0), (-1,-1), 10),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+        ('BOX', (0,0), (-1,-1), 1.5, colors.HexColor("#1f6fcb")),
+        ('ROUNDEDCORNERS', [5,5,5,5]),
+    ]))
+    story.append(total_table)
+    story.append(Spacer(1, 30))
+
+    # Mensaje final con estilo
+    terms_style = ParagraphStyle(
+        'Terms',
+        parent=style_normal,
+        fontSize=9,
+        textColor=colors.HexColor("#6c757d"),
+        alignment=1  # Centrado
+    )
+    
+    story.append(Paragraph("¡Gracias por su compra!", 
+                          ParagraphStyle('ThankYou', parent=style_title, fontSize=16, textColor=colors.HexColor("#1f6fcb"))))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("Política de devolución: 30 días con recibo.", terms_style))
+    story.append(Paragraph("www.zapateriaestilo.com", terms_style))
 
     doc.build(story)
     buffer.seek(0)
@@ -105,8 +135,8 @@ def comprar():
     try:
         # Cálculos
         subtotal = sum(item['cantidad'] * item['precio_unitario'] for item in datos_carrito['items'])
-        iva = round(subtotal * 0.16)
-        total = subtotal + iva
+        iva = 0.0
+        total = subtotal
 
         # Crear factura
         nueva_factura = Factura(

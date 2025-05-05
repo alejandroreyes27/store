@@ -85,3 +85,25 @@ def delete(id):
     db.session.commit()
     flash('❌ Producto eliminado del carrito correctamente')
     return redirect(url_for('carrito.index'))
+
+@bp.route('/carrito/eliminar-seleccionados', methods=['POST'])
+@login_required
+def eliminar_seleccionados():
+    try:
+        data = request.get_json()
+        ids_carrito = data.get('ids_carrito', [])  # Cambiado a ids_carrito
+        
+        if not ids_carrito:
+            return jsonify({'success': False, 'error': 'No hay productos seleccionados'}), 400
+
+        # Eliminar solo los productos seleccionados del usuario actual
+        Carrito.query.filter(
+            Carrito.idCarrito.in_(ids_carrito),  # Usamos idCarrito ahora
+            Carrito.idUser == current_user.idUser
+        ).delete(synchronize_session=False)
+        
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
