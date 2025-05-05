@@ -194,6 +194,11 @@
                         <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
                         {% endfor %}
                     </select>
+                    <div class="mb-3">
+                        <label for="talla" class="form-label">Talla</label>
+                        <input type="text" class="form-control" id="talla" name="talla"
+                               value="{{ request.form.talla or '' }}">
+                    </div>
                     </div>
                     <div class="mb-3">
                     <label class="form-label">Imagen</label>
