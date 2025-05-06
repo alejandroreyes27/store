@@ -396,3 +396,24 @@
 #agregar-carrito-btn:hover {
     background-color: #0056b3;
 }
+/* CSS */
+.custom-select-wrapper {
+    width: 200px;
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+}
+
+.custom-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    appearance: none;
+    background-color: #f9f9f9;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    cursor: pointer;
+}

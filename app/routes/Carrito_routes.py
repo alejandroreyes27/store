@@ -25,22 +25,25 @@ def add(id):
     data = request.get_json()  # Obtener datos en formato JSON
     idProducto = data.get('idproducto')
     cantidad = int(data.get('cantidad'))
+    talla = data.get('talla') 
     idUser = current_user.idUser
 
     dataexit = Carrito.query.filter_by(idProducto=idProducto, idUser=idUser).first()
     
     if dataexit:
         dataexit.cantidad += cantidad
+        dataexit.talla = talla
     else:
         new_carrito = Carrito(
             idProducto=idProducto,
             idUser=idUser,
-            cantidad=cantidad
+            cantidad=cantidad,
+            talla=talla
         )
         db.session.add(new_carrito)
     
     db.session.commit()
-    return {'success': True}, 200
+    return {'success': True}, 200 
 
 @bp.route('/carrito/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -59,7 +62,8 @@ def edit(id):
         try:
             data = request.get_json()
             nueva_cantidad = int(data.get('cantidad'))
-
+            nueva_talla    = data.get('talla')
+            
             # Buscar el producto en el carrito
             item = Carrito.query.filter_by(idCarrito=id, idUser=current_user.idUser).first_or_404()
 
@@ -69,6 +73,7 @@ def edit(id):
 
             # Actualizar la cantidad
             item.cantidad = nueva_cantidad
+            item.talla = nueva_talla
             db.session.commit()
 
             return {'success': True}, 200

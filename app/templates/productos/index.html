@@ -10,6 +10,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .center-wrapper {
+          display: flex;
+          justify-content: center; /* horiz */
+          align-items: center;     /* vert */
+          flex-direction: column;  /* label encima, select debajo */
+        }
+        .center-wrapper select {
+          width: 120px;            /* ancho fijo */
+        }
+        /* Ajusta el container del modal para que posición relativa contenga el botón */
+        .modal-content {
+        position: relative;
+        padding-bottom: 3rem; /* espacio extra para el botón */
+        }
+        /* Botón guía de tallas */
+        .modal-content .btn-link {
+        font-weight: 500;
+        color: #007bff;
+        }
+      </style>
 </head>
 <body>
     <!-- Header -->
@@ -105,7 +126,7 @@
                     <!-- Contenedor para precio y botón -->
                     <div class="price-and-cart">
                         <p class="price"><b>${{ "{:,.0f}".format(producto.precioProducto).replace(",", ".") }}</b></p>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                             data-id="{{ producto.idProducto }}"
                             data-nombre="{{ producto.nombreProducto }}"
                             data-precio="{{ producto.precioProducto|int }}" 
@@ -114,6 +135,7 @@
                             data-categoria="{{ producto.categoria.nombreCategoria or 'Sin categoría' }}">
                         <i class="material-icons">shopping_cart</i>
                     </button>
+
                     </div>
                     <!-- Acciones para administradores -->
                     <div class="admin-actions">
@@ -126,8 +148,42 @@
             </div>
             {% endfor %}
         </div>  
-
-
+        <!-- Modal  interior-->
+        <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="sizeGuideLabel">Guía de tallas</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Tamaño etiqueta</th>
+                            <th>EU</th>
+                            <th>Largo del pie (cm)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr><td>39</td><td>38.5</td><td>24.5</td></tr>
+                          <tr><td>40</td><td>39.5</td><td>25</td></tr>
+                          <tr><td>41</td><td>40</td><td>25.5</td></tr>
+                          <tr><td>42</td><td>41</td><td>26</td></tr>
+                          <tr><td>43</td><td>42</td><td>26.5</td></tr>
+                          <tr><td>44</td><td>43</td><td>27</td></tr>
+                          <tr><td>45</td><td>43.5</td><td>27.5</td></tr>
+                          <tr><td>46</td><td>44.5</td><td>28</td></tr>
+                        </tbody>
+                      </table>
+                      <small class="text-muted">
+                        ℹ️ Las medidas se obtienen manualmente por lo que puede haber ligeras variaciones.
+                      </small>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -150,6 +206,31 @@
                                 <button type="button" class="quantity-btn plus" onclick="cambiarCantidad(1, 'modal-cantidad')">+</button>
                             </div>
 
+                            <div class="d-flex justify-content-center">
+                                <div class="custom-select-wrapper text-center">
+                                  <label for="talla" class="form-label">EU talla</label>
+                                  <select id="talla" class="form-select mx-auto" style="width: 120px;">
+                                    <option disabled selected>EU</option>
+                                    <option value="38.5">38.5</option>
+                                    <option value="39.5">39.5</option>
+                                    <option value="40">40</option>
+                                    <option value="41">41</option>
+                                    <option value="42">42</option>
+                                    <option value="43">43</option>
+                                    <option value="43.5">43.5</option>
+                                    <option value="44.5">44.5</option>
+                                </select>
+                            </div>
+                            
+                            <button
+                            id="sizeGuideBtn"
+                            type="button"
+                            class="btn btn-primary position-absolute start-0 bottom-0 m-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop1">
+                            Guía de tallas
+                          </button>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -158,6 +239,7 @@
                 </div>
             </div>
         </div>
+        
 
         <!-- Modal para agregar productos -->
         <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -306,6 +388,7 @@
     </div>
 
     <!-- Scripts -->
+
     <script>
         // Función para cambiar la cantidad en el control de cantidad
         function cambiarCantidad(cambio, inputId) {
@@ -317,65 +400,82 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('staticBackdrop');
+            const modal1 = document.getElementById('staticBackdrop1');
+
             const modalImagen = document.getElementById('modal-imagen');
             const modalPrecio = document.getElementById('modal-precio');
             const modalCategoria = document.getElementById('modal-categoria');
             const modalDescripcion = document.getElementById('modal-descripcion');
             const modalCantidad = document.getElementById('modal-cantidad');
+            const selectTalla   = document.getElementById('talla'); // ← capturamos el <select>
 
             // Escuchar el evento 'show.bs.modal' para cargar los datos del producto
             modal.addEventListener('show.bs.modal', function (event) {
-                // Botón que activó el modal
                 const button = event.relatedTarget;
-
-                // Extraer los datos del botón
-                const idProducto = button.getAttribute('data-id');
-                const nombreProducto = button.getAttribute('data-nombre');
-                const precioProducto = button.getAttribute('data-precio');
+                const idProducto       = button.getAttribute('data-id');
+                const nombreProducto   = button.getAttribute('data-nombre');
+                const precioProducto   = button.getAttribute('data-precio');
                 const descripcionProducto = button.getAttribute('data-descripcion');
-                const imagenProducto = button.getAttribute('data-imagen');
-                const categoriaProducto = button.getAttribute('data-categoria');
+                const imagenProducto   = button.getAttribute('data-imagen');
+                const categoriaProducto= button.getAttribute('data-categoria');
 
-                // Formatear el precio con puntos cada tres cifras
-                const precioFormateado = parseInt(precioProducto).toLocaleString("es-CO");
-
-                // Guardar el ID del producto en el modal para usarlo más tarde
                 modal.setAttribute('data-product-id', idProducto);
+                modalImagen.src         = imagenProducto;
+                modalImagen.alt         = `Imagen de ${nombreProducto}`;
+                modalPrecio.textContent = `$${parseInt(precioProducto).toLocaleString("es-CO")}`;
+                modalCategoria.textContent    = categoriaProducto;
+                modalDescripcion.textContent  = descripcionProducto;
 
-                // Actualizar el contenido del modal con los datos del producto
-                modalImagen.src = imagenProducto;
-                modalImagen.alt = `Imagen de ${nombreProducto}`;
-                modalPrecio.textContent = `$${precioFormateado}`;
-                modalCategoria.textContent = categoriaProducto;
-                modalDescripcion.textContent = descripcionProducto;
+                // Reiniciar valores de cantidad y talla
+                modalCantidad.value = 1;
+                selectTalla.selectedIndex = 0;  // vuelve a "EU"
+            });
 
-                // Reiniciar la cantidad en el control de cantidad
+            modal1.addEventListener('show.bs.modal', function (event) {
+ 
+
+                modal.setAttribute('data-product-id', 1);
+                modalImagen.src         = imagenProducto;
+                modalImagen.alt         = `Imagen de nombre`;
+                modalPrecio.textContent = `$`;
+                modalCategoria.textContent    = "cate";
+                modalDescripcion.textContent  = "Descr";
+
+                // Reiniciar valores de cantidad y talla
                 modalCantidad.value = 1;
             });
+
 
             // Agregar evento al botón "Agregar al Carrito"
             const btnAgregarCarrito = document.getElementById('agregar-carrito-btn');
             btnAgregarCarrito.addEventListener('click', function () {
                 const cantidad = parseInt(modalCantidad.value);
+                const talla    = selectTalla.value;               // ← leemos la talla
                 const idProducto = modal.getAttribute('data-product-id');
 
-                if (!idProducto || isNaN(cantidad)) {
-                    alert('Error: No se pudo obtener el ID del producto o la cantidad es inválida.');
+                if (!idProducto || isNaN(cantidad) || !talla) {
+                    alert('Por favor, selecciona una talla y cantidad válidas.');
                     return;
                 }
 
-                // Enviar la solicitud POST al servidor
+                // Enviar la solicitud POST al servidor con talla incluida
                 fetch(`/carrito/add/${idProducto}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ idproducto: idProducto, cantidad: cantidad })
+                    body: JSON.stringify({
+                        idproducto: idProducto,
+                        cantidad: cantidad,
+                        talla: talla           // ← agregamos aquí
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         bootstrap.Modal.getInstance(modal).hide(); // Cerrar el modal
+                        // Opcional: recargar para ver la tabla de carrito actualizada
+                        location.reload();
                     } else {
                         alert('Error al agregar el producto al carrito.');
                     }

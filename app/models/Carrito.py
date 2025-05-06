@@ -7,7 +7,7 @@ class Carrito(db.Model):
     idProducto = db.Column(db.Integer, db.ForeignKey('productos.idProducto'))
     idUser = db.Column(db.Integer, db.ForeignKey('user.idUser'))
     cantidad = db.Column(db.Integer, nullable=True, default=1)
-    
+    talla = db.Column(db.String(10),nullable=False,server_default='')
     producto = db.relationship('Productos', backref='carrito', lazy=True)
     usuario = db.relationship('Users', backref='carrito', lazy=True)  # Relación con User
 
