@@ -148,247 +148,248 @@
             </div>
             {% endfor %}
         </div>  
-        <!-- Modal  interior-->
-        <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="sizeGuideLabel">Guía de tallas</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>Tamaño etiqueta</th>
-                            <th>EU</th>
-                            <th>Largo del pie (cm)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr><td>39</td><td>38.5</td><td>24.5</td></tr>
-                          <tr><td>40</td><td>39.5</td><td>25</td></tr>
-                          <tr><td>41</td><td>40</td><td>25.5</td></tr>
-                          <tr><td>42</td><td>41</td><td>26</td></tr>
-                          <tr><td>43</td><td>42</td><td>26.5</td></tr>
-                          <tr><td>44</td><td>43</td><td>27</td></tr>
-                          <tr><td>45</td><td>43.5</td><td>27.5</td></tr>
-                          <tr><td>46</td><td>44.5</td><td>28</td></tr>
-                        </tbody>
-                      </table>
-                      <small class="text-muted">
-                        ℹ️ Las medidas se obtienen manualmente por lo que puede haber ligeras variaciones.
-                      </small>
-                    </div>
-                  </div>
+    </div>
+
+    <!-- Modal para agregar productos -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Formulario que envía la información a la ruta /productos/add -->
+            <form method="POST" action="{{ url_for('productos.add') }}" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Agregar Nuevo Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-        </div>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalles del Producto</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <img id="modal-imagen" class="product-image" alt="Imagen del producto" style="width: 50%;">
-                        <p id="producto-precio"><strong>Precio:</strong> <span id="modal-precio"></span></p>
-                        <p id="producto-categoria"><strong>Categoría:</strong> <span id="modal-categoria"></span></p>
-                        <p id="producto-descripcion"><strong>Descripción:</strong> <span id="modal-descripcion"></span></p>
-
-                        <!-- Control de cantidad -->
-                            <!-- Control de cantidad -->
-                            <div class="quantity-control">
-                                <button type="button" class="quantity-btn minus" onclick="cambiarCantidad(-1, 'modal-cantidad')">-</button>
-                                <input type="text" id="modal-cantidad" name="cantidad" value="1" min="1" class="quantity-input" readonly>
-                                <button type="button" class="quantity-btn plus" onclick="cambiarCantidad(1, 'modal-cantidad')">+</button>
-                            </div>
-
-                            <div class="d-flex justify-content-center">
-                                <div class="custom-select-wrapper text-center">
-                                  <label for="talla" class="form-label">EU talla</label>
-                                  <select id="talla" class="form-select mx-auto" style="width: 120px;">
-                                    <option disabled selected>EU</option>
-                                    <option value="38.5">38.5</option>
-                                    <option value="39.5">39.5</option>
-                                    <option value="40">40</option>
-                                    <option value="41">41</option>
-                                    <option value="42">42</option>
-                                    <option value="43">43</option>
-                                    <option value="43.5">43.5</option>
-                                    <option value="44.5">44.5</option>
-                                </select>
-                            </div>
-                            
-                            <button
-                            id="sizeGuideBtn"
-                            type="button"
-                            class="btn btn-primary position-absolute start-0 bottom-0 m-3"
-                            data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop1">
-                            Guía de tallas
-                          </button>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" id="agregar-carrito-btn" class="btn btn-primary">Agregar al carrito</button>
-                    </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombreProducto" required>
+                </div>
+                <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" name="descripcionProducto" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                <label class="form-label">Precio</label>
+                <input type="number" class="form-control" name="precioProducto" step="0.01" required>
+                </div>
+                <div class="mb-3">
+                <label class="form-label">Stock</label>
+                <input type="number" class="form-control" name="stock" required>
+                </div>
+                <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select class="form-select" name="categoria" required>
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    {% for cat in categorias %}
+                    <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
+                    {% endfor %}
+                </select>
+                <div class="mb-3">
+                    <label for="talla" class="form-label">Talla</label>
+                    <input type="text" class="form-control" id="talla" name="talla"
+                            value="{{ request.form.talla or '' }}">
+                </div>
+                </div>
+                <div class="mb-3">
+                <label class="form-label">Imagen</label>
+                <input type="file" class="form-control" name="imagenProducto">
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- Botón submit que hará el POST -->
+                <button type="submit" class="btn btn-primary">Agregar Producto</button>
+            </div>
+            </form>
         </div>
-        
+        </div>
+    </div>
 
-        <!-- Modal para agregar productos -->
-        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+    <!-- Modal  interior-->
+    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <!-- Formulario que envía la información a la ruta /productos/add -->
-                <form method="POST" action="{{ url_for('productos.add') }}" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addProductModalLabel">Agregar Nuevo Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                  <h5 class="modal-title" id="sizeGuideLabel">Guía de tallas</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="nombreProducto" required>
-                    </div>
-                    <div class="mb-3">
-                    <label class="form-label">Descripción</label>
-                    <textarea class="form-control" name="descripcionProducto" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                    <label class="form-label">Precio</label>
-                    <input type="number" class="form-control" name="precioProducto" step="0.01" required>
-                    </div>
-                    <div class="mb-3">
-                    <label class="form-label">Stock</label>
-                    <input type="number" class="form-control" name="stock" required>
-                    </div>
-                    <div class="mb-3">
-                    <label class="form-label">Categoría</label>
-                    <select class="form-select" name="categoria" required>
-                        <option value="" disabled selected>Selecciona una categoría</option>
-                        {% for cat in categorias %}
-                        <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="mb-3">
-                        <label for="talla" class="form-label">Talla</label>
-                        <input type="text" class="form-control" id="talla" name="talla"
-                               value="{{ request.form.talla or '' }}">
-                    </div>
-                    </div>
-                    <div class="mb-3">
-                    <label class="form-label">Imagen</label>
-                    <input type="file" class="form-control" name="imagenProducto">
-                    </div>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Tamaño etiqueta</th>
+                        <th>EU</th>
+                        <th>Largo del pie (cm)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>39</td><td>38.5</td><td>24.5</td></tr>
+                      <tr><td>40</td><td>39.5</td><td>25</td></tr>
+                      <tr><td>41</td><td>40</td><td>25.5</td></tr>
+                      <tr><td>42</td><td>41</td><td>26</td></tr>
+                      <tr><td>43</td><td>42</td><td>26.5</td></tr>
+                      <tr><td>44</td><td>43</td><td>27</td></tr>
+                      <tr><td>45</td><td>43.5</td><td>27.5</td></tr>
+                      <tr><td>46</td><td>44.5</td><td>28</td></tr>
+                    </tbody>
+                  </table>
+                  <small class="text-muted">
+                    ℹ️ Las medidas se obtienen manualmente por lo que puede haber ligeras variaciones.
+                  </small>
+                </div>
+              </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Detalles del Producto</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modal-imagen" class="product-image" alt="Imagen del producto" style="width: 50%;">
+                    <p id="producto-precio"><strong>Precio:</strong> <span id="modal-precio"></span></p>
+                    <p id="producto-categoria"><strong>Categoría:</strong> <span id="modal-categoria"></span></p>
+                    <p id="producto-descripcion"><strong>Descripción:</strong> <span id="modal-descripcion"></span></p>
+
+                    <!-- Control de cantidad -->
+                        <!-- Control de cantidad -->
+                        <div class="quantity-control">
+                            <button type="button" class="quantity-btn minus" onclick="cambiarCantidad(-1, 'modal-cantidad')">-</button>
+                            <input type="text" id="modal-cantidad" name="cantidad" value="1" min="1" class="quantity-input" readonly>
+                            <button type="button" class="quantity-btn plus" onclick="cambiarCantidad(1, 'modal-cantidad')">+</button>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="custom-select-wrapper text-center">
+                              <label for="talla" class="form-label">EU talla</label>
+                              <select id="talla" class="form-select mx-auto" style="width: 120px;">
+                                <option disabled selected>EU</option>
+                                <option value="38.5">38.5</option>
+                                <option value="39.5">39.5</option>
+                                <option value="40">40</option>
+                                <option value="41">41</option>
+                                <option value="42">42</option>
+                                <option value="43">43</option>
+                                <option value="43.5">43.5</option>
+                                <option value="44.5">44.5</option>
+                            </select>
+                        </div>
+                        
+                        <button
+                        id="sizeGuideBtn"
+                        type="button"
+                        class="btn btn-primary position-absolute start-0 bottom-0 m-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop1">
+                        Guía de tallas
+                      </button>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <!-- Botón submit que hará el POST -->
-                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                    <button type="button" id="agregar-carrito-btn" class="btn btn-primary">Agregar al carrito</button>
                 </div>
-                </form>
-            </div>
             </div>
         </div>
+    </div>
+    
 
-        <!-- Modal de Edición (se mostrará automáticamente si hay producto_edit) -->
-        {% if producto_edit %}
-        <div class="modal fade show" id="editProductModal" tabindex="-1" 
-            aria-labelledby="editProductModalLabel" aria-hidden="true" 
-            style="display: block; overflow-y: auto;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <form method="POST" action="{{ url_for('productos.edit', id=producto_edit.idProducto) }}" 
-                    enctype="multipart/form-data">
-                <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
-                <a href="{{ url_for('productos.index') }}" class="btn-close"></a>
-                </div>
-                <div class="modal-body">
-                <!-- Nombre -->
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="nombreProducto" 
-                        value="{{ producto_edit.nombreProducto }}" required>
-                </div>
-
-                <!-- Descripción -->
-                <div class="mb-3">
-                    <label class="form-label">Descripción</label>
-                    <textarea class="form-control" name="descripcionProducto" rows="3" required>{{ producto_edit.descripcionProducto }}</textarea>
-                </div>
-
-                <!-- Precio -->
-                <div class="mb-3">
-                    <label class="form-label">Precio</label>
-                    <input type="number" class="form-control" name="precioProducto" step="0.01" 
-                        value="{{ producto_edit.precioProducto }}" required>
-                </div>
-
-                <!-- Stock -->
-                <div class="mb-3">
-                    <label class="form-label">Stock</label>
-                    <input type="number" class="form-control" name="stock" 
-                        value="{{ producto_edit.stock }}" required>
-                </div>
-
-                <!-- Categoría -->
-                <div class="mb-3">
-                    <label class="form-label">Categoría</label>
-                    <select class="form-select" name="categoria" required>
-                    <option value="">Selecciona una categoría</option>
-                    {% for cat in categorias %}
-                        <option value="{{ cat.idCategoria }}" 
-                                {% if cat.idCategoria == producto_edit.idCategoria %}selected{% endif %}>
-                        {{ cat.nombreCategoria }}
-                        </option>
-                    {% endfor %}
-                    </select>
-                </div>
-
-                <!-- Imagen actual -->
-                <div class="mb-3">
-                    <label class="form-label">Imagen Actual</label>
-                    <div>
-                    {% if producto_edit.imagenProducto %}
-                        <img src="{{ url_for('static', filename=producto_edit.imagenProducto) }}" 
-                            alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
-                    {% else %}
-                        <p class="text-muted">No hay imagen cargada</p>
-                    {% endif %}
-                    </div>
-                </div>
-
-                <!-- Nueva imagen -->
-                <div class="mb-3">
-                    <label class="form-label">Nueva Imagen</label>
-                    <input type="file" class="form-control" name="imagenProducto">
-                </div>
-                </div>
-                <div class="modal-footer">
-                <a href="{{ url_for('productos.index') }}" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </form>
+    <!-- Modal de Edición (se mostrará automáticamente si hay producto_edit) -->
+    {% if producto_edit %}
+    <div class="modal fade show" id="editProductModal" tabindex="-1" 
+        aria-labelledby="editProductModalLabel" aria-hidden="true" 
+        style="display: block; overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form method="POST" action="{{ url_for('productos.edit', id=producto_edit.idProducto) }}" 
+                enctype="multipart/form-data">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
+            <a href="{{ url_for('productos.index') }}" class="btn-close"></a>
             </div>
-        </div>
-        </div>
-        <div class="modal-backdrop fade show"></div>
-        {% endif %}
+            <div class="modal-body">
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombreProducto" 
+                    value="{{ producto_edit.nombreProducto }}" required>
+            </div>
 
+            <!-- Descripción -->
+            <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" name="descripcionProducto" rows="3" required>{{ producto_edit.descripcionProducto }}</textarea>
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-3">
+                <label class="form-label">Precio</label>
+                <input type="number" class="form-control" name="precioProducto" step="0.01" 
+                    value="{{ producto_edit.precioProducto }}" required>
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-3">
+                <label class="form-label">Stock</label>
+                <input type="number" class="form-control" name="stock" 
+                    value="{{ producto_edit.stock }}" required>
+            </div>
+
+            <!-- Categoría -->
+            <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select class="form-select" name="categoria" required>
+                <option value="">Selecciona una categoría</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.idCategoria }}" 
+                            {% if cat.idCategoria == producto_edit.idCategoria %}selected{% endif %}>
+                    {{ cat.nombreCategoria }}
+                    </option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <!-- Imagen actual -->
+            <div class="mb-3">
+                <label class="form-label">Imagen Actual</label>
+                <div>
+                {% if producto_edit.imagenProducto %}
+                    <img src="{{ url_for('static', filename=producto_edit.imagenProducto) }}" 
+                        alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                {% else %}
+                    <p class="text-muted">No hay imagen cargada</p>
+                {% endif %}
+                </div>
+            </div>
+
+            <!-- Nueva imagen -->
+            <div class="mb-3">
+                <label class="form-label">Nueva Imagen</label>
+                <input type="file" class="form-control" name="imagenProducto">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <a href="{{ url_for('productos.index') }}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    {% endif %}
+
+   
     <!-- Footer -->
     <div class="footer">
         <p>&copy; 2025 Empresa. Todos los derechos reservados.</p>
     </div>
-
-    <!-- Scripts -->
-
+     <!-- Scripts -->
     <script>
         // Función para cambiar la cantidad en el control de cantidad
         function cambiarCantidad(cambio, inputId) {
