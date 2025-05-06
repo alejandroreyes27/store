@@ -14,114 +14,125 @@
   <!-- Menú (se mantiene el mismo) -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <!-- Botón de Hamburguesa -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Contenedor del Menú -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
-          </li>
-          {% if current_user.rolUser == 'administrador': %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" 
-                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="material-icons">account_circle</i>
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
-              </ul>
-            </li>
-          {% endif %}
-          <!-- Ícono de Carrito -->
-          <li class="nav-item">
-            <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
-              <i class="material-icons">shopping_cart</i>
-            </a>
-          </li>
-        </ul>
-        
-        <!-- Usuario y Cerrar Sesión -->
-        <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
-      </div>
+        <!-- Botón de Hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Contenedor del Menú -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
+                </li>
+                {% if current_user.rolUser == 'administrador' %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons">account_circle</i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center"
+                            href="{{ url_for('facturacion.facturas_index') }}">
+                            Facturas
+                            {% if pendientes_facturas > 0 %}
+                                <span class="badge bg-danger">{{ pendientes_facturas }}</span>
+                            {% endif %}
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <!-- Ícono de Carrito -->
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
+                        <i class="material-icons">shopping_cart</i>
+                    </a>
+                </li>
+            </ul>
+            <!-- Usuario y Cerrar Sesión -->
+            <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
+        </div>
     </div>
-  </nav>
+</nav>
 
-  <div class="container mt-5">
-    <h2 class="text-center">🛒 Mi Carrito</h2>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-success">{{ message }}</div>
+<div class="container mt-5">
+  <h2 class="text-center">🛒 Mi Carrito</h2>
+  
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  
+  {% if data %}
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th class="select-col">Elegir</th>
+          <th>Imagen</th>
+          <th>Producto</th>
+          <th>Talla</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        <tr data-id="{{ item.idCarrito }}" data-producto-id="{{ item.producto.idProducto }}" data-precio="{{ item.producto.precioProducto }}">          <td class="select-col">
+            <input type="checkbox" class="select-product">
+          </td>
+          <td>
+            <img src="{{ url_for('static', filename=item.producto.imagenProducto) }}" 
+                 alt="Imagen del producto" class="product-image">
+          </td>
+          <td>{{ item.producto.nombreProducto }}</td>
+          <!-- NUEVO: Campo editable de talla --><
+          <td>
+            <select class="form-select form-select-sm size-select">
+              {% for option in [38.5, 39.5, 40, 41, 42, 43, 43.5, 44.5] %}
+                <option value="{{ option }}" {% if option == item.talla %}selected{% endif %}>
+                  {{ option }}
+                </option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <div class="input-group">
+              <button class="btn btn-outline-secondary btn-decrease" type="button">-</button>
+              <input type="text" class="form-control text-center quantity-input" 
+                     value="{{ item.cantidad }}" readonly style="max-width: 60px;">
+              <button class="btn btn-outline-secondary btn-increase" type="button">+</button>
+            </div>
+          </td>
+          <td>$ {{ "{:,.0f}".format(item.producto.precioProducto).replace(",", ".") }}</td>
+          <td class="row-total">
+            $ {{ "{:,.0f}".format(item.cantidad * item.producto.precioProducto).replace(",", ".") }}
+          </td>
+          <td>
+            <form action="{{ url_for('carrito.delete', id=item.idCarrito) }}" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-danger" 
+                      onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+                      <i class="material-icons">delete</i>
+              </button>
+            </form>
+          </td>
+        </tr>
         {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    {% if data %}
-      <table class="table table-striped align-middle">
-        <thead>
-          <tr>
-            <!-- Columna de selección -->
-            <th class="select-col">Elegir</th>
-            <th>Imagen</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Total</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in data %}
-          <tr data-id="{{ item.idCarrito }}" data-precio="{{ item.producto.precioProducto }}">
-            <td class="select-col">
-              <input type="checkbox" class="select-product">
-            </td>
-            <td>
-              <img src="{{ url_for('static', filename=item.producto.imagenProducto) }}" 
-                   alt="Imagen del producto" class="product-image">
-            </td>
-            <td>{{ item.producto.nombreProducto }}</td>
-            <td>
-              <div class="input-group">
-                <button class="btn btn-outline-secondary btn-decrease" type="button">-</button>
-                <input type="text" class="form-control text-center quantity-input" 
-                       value="{{ item.cantidad }}" readonly style="max-width: 60px;">
-                <button class="btn btn-outline-secondary btn-increase" type="button">+</button>
-              </div>
-            </td>
-            <td>$ {{ "{:,.0f}".format(item.producto.precioProducto).replace(",", ".") }}</td>
-            <td class="row-total">
-              $ {{ "{:,.0f}".format(item.cantidad * item.producto.precioProducto).replace(",", ".") }}
-            </td>
-            <td>
-              <form action="{{ url_for('carrito.delete', id=item.idCarrito) }}" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-danger" 
-                        onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
-                        <i class="material-icons">delete</i>
-                </button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <div class="text-center">
-        <a href="{{ url_for('productos.index') }}" class="seguir-comprando-btn">
-          Seguir Comprando
-        </a>
-      </div>
-
-      <!-- Contenedor para el total seleccionado -->
-      <div class="total-selected-wrapper mt-4">
-        <button id="btn-comprar" class="btn btn-success">Completar Compra</button>
-        <span id="selected-total">$ 0</span>
-      </div>
+      </tbody>
+    </table>
+    
+    <!-- Botón de compra y total -->
+    <div class="total-selected-wrapper mt-4 d-flex justify-content-between">
+      <button id="btn-comprar" class="btn btn-success">Completar Compra</button>
+      <span id="selected-total">$ 0</span>
+    </div>
 
       <!-- Modal -->
       <div class="modal fade" id="invoicePreviewModal" tabindex="-1" aria-labelledby="invoicePreviewLabel" aria-hidden="true">
@@ -178,49 +189,61 @@
         total.toLocaleString('de-DE', { maximumFractionDigits: 0 });
     };
   
-    // Función para actualizar el total de una fila y en la base de datos
+    // Función para actualizar cantidad y enviar a backend
     document.querySelectorAll('tr[data-id]').forEach(row => {
       const decreaseBtn = row.querySelector('.btn-decrease');
       const increaseBtn = row.querySelector('.btn-increase');
       const qtyInput = row.querySelector('.quantity-input');
-      const rowTotalEl = row.querySelector('.row-total');
       const precioUnit = parseFloat(row.getAttribute('data-precio'));
-  
+
       const actualizarFila = () => {
         const qty = parseInt(qtyInput.value);
         const total = qty * precioUnit;
-        rowTotalEl.textContent = '$ ' + 
+        row.querySelector('.row-total').textContent = '$ ' + 
           total.toLocaleString('de-DE', { maximumFractionDigits: 0 });
         calcularTotalSeleccionado();
-  
-        // Actualización automática en la base de datos
-        fetch('{{ url_for("carrito.edit", id=0) }}'.replace('0', row.getAttribute('data-id')), {
+
+        // Enviar a backend
+        fetch('{{ url_for("carrito.update_cantidad", id=0) }}'.replace('0', row.getAttribute('data-id')), {
           method: 'POST',
-          body: JSON.stringify({ cantidad: qty }),
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(response => {
-          if (!response.ok) {
-            console.error('Error al actualizar la cantidad en el servidor');
-          }
-        })
-        .catch(err => console.error('Error en la actualización:', err));
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cantidad: qty })
+        }).catch(err => console.error('Error:', err));
       };
-  
+
       decreaseBtn.addEventListener('click', () => {
         let qty = parseInt(qtyInput.value);
-        if(qty > 1) {
+        if (qty > 1) {
           qty--;
           qtyInput.value = qty;
           actualizarFila();
         }
       });
-  
+
       increaseBtn.addEventListener('click', () => {
         let qty = parseInt(qtyInput.value);
         qty++;
         qtyInput.value = qty;
         actualizarFila();
+      });
+
+      // ✅ Nuevo: Evento para actualizar talla
+      row.querySelector('.size-select').addEventListener('change', async function () {
+        const cartId = row.getAttribute('data-id');
+        const nuevaTalla = this.value;
+
+        try {
+          const response = await fetch('/carrito/edit_talla', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idCarrito: cartId, talla: nuevaTalla })
+          });
+
+          if (!response.ok) throw new Error('Error al actualizar la talla');
+        } catch (error) {
+          console.error(error);
+          alert('No se pudo actualizar la talla');
+        }
       });
     });
   
@@ -230,24 +253,23 @@
     });
   
     // Función para manejar la compra con modal
-    document.getElementById('btn-comprar').addEventListener('click', async function() {
-      const items = [];
-      idsSeleccionadosParaFacturar = []; // Resetear
-      
-      document.querySelectorAll('tr[data-id]').forEach(row => {
-        const checkbox = row.querySelector('.select-product');
-        if (checkbox.checked) {
-          const cartId = row.getAttribute('data-id'); // Usamos idCarrito
-          idsSeleccionadosParaFacturar.push(cartId);
-          
-          items.push({
-            product_id: cartId,
-            cantidad: parseInt(row.querySelector('.quantity-input').value),
-            precio_unitario: parseFloat(row.getAttribute('data-precio')),
-            descripcion: row.querySelector('td:nth-child(3)').textContent.trim()
-          });
-        }
-      });
+      document.getElementById('btn-comprar').addEventListener('click', async function() {
+        const items = [];
+        document.querySelectorAll('tr[data-id]').forEach(row => {
+            const checkbox = row.querySelector('.select-product');
+            if (checkbox.checked) {
+                // Obtener el ID del producto real
+                const productoId = row.getAttribute('data-producto-id');
+                const talla = row.querySelector('.size-select').value;
+                items.push({
+                    product_id: productoId,  // Usar el ID del producto real
+                    cantidad: parseInt(row.querySelector('.quantity-input').value),
+                    precio_unitario: parseFloat(row.getAttribute('data-precio')),
+                    producto: row.querySelector('td:nth-child(3)').textContent.trim(),
+                    talla: talla
+                });
+            }
+        });
   
       if(items.length === 0) {
         alert("Selecciona al menos un producto.");
@@ -261,22 +283,31 @@
           body: JSON.stringify({ items: items })
         });
   
-        if (!response.ok) throw new Error("Error al procesar la compra.");
-  
-        const data = await response.json(); // Parseo de JSON
+        if (!response.ok) {
+          // Intentamos extraer un mensaje de error JSON
+          let errText;
+          try {
+            const errJson = await response.json();
+            errText = errJson.error || JSON.stringify(errJson);
+          } catch {
+            // Si no es JSON, leemos como texto
+            errText = await response.text();
+          }
+          throw new Error(errText);
+        }
+        
+        const data = await response.json();
         const invoiceData = data.invoice_data;
         pdfBase64 = data.pdf_base64; // Almacenamiento global
   
         // Construir contenido del modal
         const modalContent = `
           <div class="invoice-preview">
-            <h3>Factura #${invoiceData.numero}</h3>
-            <p>Cliente: ${invoiceData.cliente}</p>
-            <p>Fecha: ${invoiceData.fecha}</p>
             <table class="table">
               <thead>
                 <tr>
-                  <th>Descripción</th>
+                  <th>Producto</th>
+                  <th>Talla</th>
                   <th>Cantidad</th>
                   <th>Precio Unitario</th>
                   <th>Total</th>
@@ -285,7 +316,8 @@
               <tbody>
                 ${invoiceData.items.map(item => `
                   <tr>
-                    <td>${item.descripcion}</td>
+                    <td>${item.producto}</td>
+                    <td>${item.talla}</td>
                     <td>${item.cantidad}</td>
                     <td>$${item.precio_unitario.toLocaleString('de-DE')}</td>
                     <td>$${(item.cantidad * item.precio_unitario).toLocaleString('de-DE')}</td>
@@ -293,10 +325,6 @@
                 `).join('')}
               </tbody>
             </table>
-            <div class="invoice-totals">
-              <p>Subtotal: $${invoiceData.subtotal.toLocaleString('de-DE')}</p>
-              <h4>Total: $${invoiceData.subtotal.toLocaleString('de-DE')}</h4>
-            </div>
           </div>
         `;
   
@@ -368,7 +396,7 @@
         }, 1000);
       } catch (error) {
         console.error("Error al descargar el PDF:", error);
-        alert("Hubo un error al descargar el PDF.");
+        alert("Hubo un e  rror al descargar el PDF.");
       }
     });
   

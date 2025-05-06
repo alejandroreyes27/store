@@ -417,3 +417,22 @@
     background-size: 16px;
     cursor: pointer;
 }
+.center-wrapper {
+  display: flex;
+  justify-content: center; /* horiz */
+  align-items: center;     /* vert */
+  flex-direction: column;  /* label encima, select debajo */
+}
+.center-wrapper select {
+  width: 120px;            /* ancho fijo */
+}
+/* Ajusta el container del modal para que posición relativa contenga el botón */
+.modal-content {
+position: relative;
+padding-bottom: 3rem; /* espacio extra para el botón */
+}
+/* Botón guía de tallas */
+.modal-content .btn-link {
+font-weight: 500;
+color: #007bff;
+}

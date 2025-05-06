@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.models.Factura import Factura
 from app.models.Detallefactura import DetalleFactura
+from app.models.Productos import Productos
 import datetime
 from io import BytesIO
 import os
@@ -110,17 +111,18 @@ def generar_factura_pdf(datos):
     story.append(Spacer(1, 24))
 
     # Tabla de productos
-    table_data = [['Descripción', 'Cantidad', 'Precio Unitario', 'Total']] + [
+    table_data = [['Descripción', 'Talla', 'Cantidad', 'Precio Unitario', 'Total']] + [
         [
-            item['descripcion'],
+            item['producto'],
+            str(item['talla']),
             str(item['cantidad']),
             f"${item['precio_unitario']:,.0f}".replace(",", "."),
             f"${item['total']:,.0f}".replace(",", ".")
         ] for item in datos['items']
     ]
-    table = Table(table_data, colWidths=[250, 60, 100, 100])
+    table = Table(table_data, colWidths=[150, 60, 60, 100, 100])
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1f6fcb")),  # Azul principal de la marca
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1f6fcb")),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
@@ -129,9 +131,10 @@ def generar_factura_pdf(datos):
         ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#f8f9fa")),
         ('GRID', (0,0), (-1,-1), 1, colors.HexColor("#dee2e6")),
         ('FONTSIZE', (0,1), (-1,-1), 10),
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),  # Alinear texto a la izquierda
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#1f6fcb")),  # Bordes más visibles
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#1f6fcb")),
     ]))
+    
     story.append(table)
     story.append(Spacer(1, 30))
 
@@ -179,31 +182,37 @@ def comprar():
         return jsonify({'error': 'No hay productos seleccionados'}), 400
 
     try:
-        # Cálculos
-        subtotal = sum(item['cantidad'] * item['precio_unitario'] for item in datos_carrito['items'])
-        iva = 0.0
-        total = subtotal
-
         # Crear factura
         nueva_factura = Factura(
             user_id=current_user.idUser,
-            subtotal=subtotal,
-            iva=iva,
-            total=total
+            subtotal=0.0,
+            iva=0.0,
+            total=0.0
         )
         db.session.add(nueva_factura)
         db.session.commit()
 
-        # Crear detalles
+        # Validar y crear detalles
+        subtotal = 0.0
         for item in datos_carrito['items']:
+            producto = Productos.query.get(item['product_id'])
+            if not producto:
+                raise ValueError(f"Producto {item['product_id']} no encontrado")
+
+            subtotal += item['cantidad'] * item['precio_unitario']
+
             detalle = DetalleFactura(
                 factura_id=nueva_factura.id,
                 product_id=item['product_id'],
+                talla=item['talla'],  # Guardamos la talla
                 quantity=item['cantidad'],
                 price=item['precio_unitario'],
                 total=item['cantidad'] * item['precio_unitario']
             )
             db.session.add(detalle)
+
+        nueva_factura.subtotal = subtotal
+        nueva_factura.total = subtotal
         db.session.commit()
 
         # Preparar datos para PDF
@@ -212,14 +221,15 @@ def comprar():
             'fecha': datetime.datetime.now().strftime("%d/%m/%Y"),
             'numero': f"FAC-{datetime.datetime.now().strftime('%Y%m%d')}-{nueva_factura.id}",
             'items': [{
-                'descripcion': item.get('descripcion', 'Producto'),
+                'producto': item['producto'],
+                'talla': item['talla'],
                 'cantidad': item['cantidad'],
                 'precio_unitario': item['precio_unitario'],
                 'total': item['cantidad'] * item['precio_unitario']
             } for item in datos_carrito['items']],
             'subtotal': subtotal,
-            'iva': iva,
-            'total': total
+            'iva': 0.0,
+            'total': subtotal
         }
 
         # Generar PDF y convertir a Base64
@@ -230,7 +240,7 @@ def comprar():
             'invoice_data': datos_factura,
             'pdf_base64': pdf_base64
         })
-
     except Exception as e:
         db.session.rollback()
+        current_app.logger.exception("Error en /facturacion/comprar")
         return jsonify({'error': str(e)}), 500

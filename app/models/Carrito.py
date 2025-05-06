@@ -13,3 +13,4 @@ class Carrito(db.Model):
 
     def get_id(self):
         return str(self.idCarrito)
+    

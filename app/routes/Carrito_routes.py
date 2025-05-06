@@ -1,7 +1,6 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
-from flask import jsonify
 from app.models.Categoria import Categoria
 from werkzeug.utils import secure_filename
 from app.models.Carrito import Carrito
@@ -11,18 +10,17 @@ from app import db
 bp = Blueprint('carrito', __name__)
 
 @bp.route('/carrito')
-@login_required  # Asegura que el usuario esté logueado
+@login_required
 def index():
-    # Filtra los productos del carrito por el usuario actual
     data = Carrito.query.filter_by(idUser=current_user.idUser).all()
     data_producto = Productos.query.all()
     categorias = Categoria.query.all()
-    return render_template('carrito/index.html', data=data, usuario=current_user, producto=data_producto,categorias=categorias)
+    return render_template('carrito/index.html', data=data, usuario=current_user, producto=data_producto, categorias=categorias)
 
 @bp.route('/carrito/add/<int:id>', methods=['POST'])
 @login_required
 def add(id):
-    data = request.get_json()  # Obtener datos en formato JSON
+    data = request.get_json()
     idProducto = data.get('idproducto')
     cantidad = int(data.get('cantidad'))
     talla = data.get('talla') 
@@ -49,7 +47,6 @@ def add(id):
 @login_required
 def edit(id):
     if request.method == 'GET':
-        # Obtener los datos del producto para mostrar en el modal
         item = Carrito.query.filter_by(idCarrito=id, idUser=current_user.idUser).first_or_404()
         return jsonify({
             'nombre': item.producto.nombreProducto,
@@ -62,16 +59,13 @@ def edit(id):
         try:
             data = request.get_json()
             nueva_cantidad = int(data.get('cantidad'))
-            nueva_talla    = data.get('talla')
+            nueva_talla = data.get('talla')
             
-            # Buscar el producto en el carrito
             item = Carrito.query.filter_by(idCarrito=id, idUser=current_user.idUser).first_or_404()
 
-            # Validar que la cantidad no sea menor a 1
             if nueva_cantidad < 1:
                 return {'success': False, 'message': 'La cantidad debe ser al menos 1'}, 400
 
-            # Actualizar la cantidad
             item.cantidad = nueva_cantidad
             item.talla = nueva_talla
             db.session.commit()
@@ -96,14 +90,13 @@ def delete(id):
 def eliminar_seleccionados():
     try:
         data = request.get_json()
-        ids_carrito = data.get('ids_carrito', [])  # Cambiado a ids_carrito
+        ids_carrito = data.get('ids_carrito', [])
         
         if not ids_carrito:
             return jsonify({'success': False, 'error': 'No hay productos seleccionados'}), 400
 
-        # Eliminar solo los productos seleccionados del usuario actual
         Carrito.query.filter(
-            Carrito.idCarrito.in_(ids_carrito),  # Usamos idCarrito ahora
+            Carrito.idCarrito.in_(ids_carrito),
             Carrito.idUser == current_user.idUser
         ).delete(synchronize_session=False)
         
@@ -112,3 +105,23 @@ def eliminar_seleccionados():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/carrito/update-cantidad/<int:id>', methods=['POST'])
+@login_required
+def update_cantidad(id):
+    data = request.json
+    carrito = Carrito.query.get(id)
+    if carrito:
+        carrito.cantidad = data['cantidad']
+        db.session.commit()
+    return jsonify({'success': True})
+
+@bp.route('/carrito/edit_talla', methods=['POST'])
+@login_required
+def edit_talla():
+    data = request.json
+    carrito = Carrito.query.get(data['idCarrito'])
+    if carrito:
+        carrito.talla = data['talla']
+        db.session.commit()
+    return jsonify({'success': True})

@@ -9,8 +9,6 @@ class Productos(db.Model):
     precioProducto = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     imagenProducto = db.Column(db.String(255), nullable=True)
-    
-    # Nuevo campo talla
     talla = db.Column(db.String(10), nullable=True)
 
     idCategoria = db.Column(db.Integer, db.ForeignKey('categoria.idCategoria'), nullable=True)
