@@ -157,17 +157,18 @@
                 <input type="number" class="form-control" name="stock" required>
                 </div>
                 <div class="mb-3">
-                <label class="form-label">Categoría</label>
-                <select class="form-select" name="categoria" required>
-                    <option value="" disabled selected>Selecciona una categoría</option>
-                    {% for cat in categorias %}
-                    <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
-                    {% endfor %}
+                    <label class="form-label">Categoría</label>
+                    <select class="form-select" name="categoria" required>
+                      <option value="" disabled selected>Selecciona una categoría</option>
+                      {% for cat in categorias %}
+                        <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
+                      {% endfor %}
+                    </select>
                 </div>
-                <br>
-                <div class="mb-3">
-                <label class="form-label">Imagen</label>
-                <input type="file" class="form-control" name="imagenProducto">
+                  
+                <div class="mb-3 mt-4">
+                    <label class="form-label">Imagen</label>
+                    <input type="file" class="form-control" name="imagenProducto">
                 </div>
             </div>
             <div class="modal-footer">

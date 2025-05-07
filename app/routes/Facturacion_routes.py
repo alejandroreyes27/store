@@ -274,12 +274,14 @@ def eliminar_seleccionados():
         current_app.logger.exception("Error eliminando productos seleccionados")
         return jsonify({'success': False, 'error': 'Error al eliminar del carrito'}), 500
     
+from flask import request
+
 @bp.route('/facturas/delete/<int:factura_id>')
 @login_required
 def delete_factura(factura_id):
     # Buscar la factura o devolver 404
     factura = Factura.query.get_or_404(factura_id)
-    
+
     try:
         # Eliminar la factura (los detalles se eliminan automáticamente por la cascada)
         db.session.delete(factura)
@@ -288,5 +290,15 @@ def delete_factura(factura_id):
     except Exception as e:
         db.session.rollback()
         flash(f'Error al eliminar la factura: {str(e)}', 'error')
-    
-    return redirect(url_for('carrito.index'))
+
+    # Intentamos redirigir de vuelta a la página que nos llamó
+    referer = request.headers.get('Referer')
+    if referer:
+        return redirect(referer)
+
+    # Fallback: si no hay referer, redirigimos según rol
+    if current_user.rolUser == 'administrador':
+        return redirect(url_for('facturacion.facturas_index'))
+    else:
+        return redirect(url_for('carrito.index'))
+

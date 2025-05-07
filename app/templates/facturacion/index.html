@@ -37,6 +37,11 @@
             {% if not fac.revisada %}
               <a href="{{ url_for('facturacion.marcar_revisada', id=fac.id) }}" class="btn btn-sm btn-success">Marcar revisada</a>
             {% endif %}
+            <a href="{{ url_for('facturacion.delete_factura', factura_id=fac.id) }}"
+                class="btn btn-sm btn-danger"
+                onclick="return confirm('¿Eliminar factura #{{ fac.id }}?');">
+              Eliminar
+            </a>
           </td>
         </tr>
         {% endfor %}
