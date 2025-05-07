@@ -239,7 +239,8 @@ def comprar():
 
         return jsonify({
             'invoice_data': datos_factura,
-            'pdf_base64': pdf_base64
+            'pdf_base64': pdf_base64,
+            'factura_id': nueva_factura.id   # ← lo agregamos aquí
         })
     except Exception as e:
         db.session.rollback()
@@ -272,3 +273,20 @@ def eliminar_seleccionados():
         db.session.rollback()
         current_app.logger.exception("Error eliminando productos seleccionados")
         return jsonify({'success': False, 'error': 'Error al eliminar del carrito'}), 500
+    
+@bp.route('/facturas/delete/<int:factura_id>')
+@login_required
+def delete_factura(factura_id):
+    # Buscar la factura o devolver 404
+    factura = Factura.query.get_or_404(factura_id)
+    
+    try:
+        # Eliminar la factura (los detalles se eliminan automáticamente por la cascada)
+        db.session.delete(factura)
+        db.session.commit()
+        flash('Factura eliminada exitosamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar la factura: {str(e)}', 'error')
+    
+    return redirect(url_for('carrito.index'))

@@ -146,8 +146,7 @@
                   <!-- Contenido dinámico aquí -->
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-
+                  <a id="cancelInvoiceLink" href="#" class="btn btn-secondary">Cancelar</a>
                   <button type="button" class="btn btn-success" id="downloadPdfBtn">Descargar PDF</button>
                   <button type="button" class="btn btn-primary ms-2" id="continueShoppingBtn">Seguir Comprando</button>
                 </div>
@@ -289,6 +288,9 @@
             });
             if (!resp.ok) throw new Error((await resp.json()).error || resp.statusText);
             const data = await resp.json();
+            const facturaId = data.factura_id;
+            const deleteUrl = `/facturacion/facturas/delete/${facturaId}`;
+            document.getElementById('cancelInvoiceLink').href = deleteUrl;
       
             // Guarda el PDF y construye tabla
             pdfBase64 = data.pdf_base64;

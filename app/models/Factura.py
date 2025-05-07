@@ -17,7 +17,7 @@ class Factura(db.Model):
     total = db.Column(db.Float, nullable=False, default=0.0)
     revisada = db.Column(db.Boolean, default=False, nullable=False)
 
-    detalles = db.relationship('DetalleFactura', backref='factura', lazy=True)
+    detalles = db.relationship('DetalleFactura', backref='factura', lazy=True, cascade='all, delete-orphan')
     def __init__(self, user_id, subtotal, iva, total):
         self.user_id = user_id
         self.subtotal = subtotal
