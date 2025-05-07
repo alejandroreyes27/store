@@ -4,6 +4,7 @@ from app import db
 from app.models.Factura import Factura
 from app.models.Detallefactura import DetalleFactura
 from app.models.Productos import Productos
+from app.models.Carrito import Carrito
 import datetime
 from io import BytesIO
 import os
@@ -244,3 +245,30 @@ def comprar():
         db.session.rollback()
         current_app.logger.exception("Error en /facturacion/comprar")
         return jsonify({'error': str(e)}), 500
+    
+
+@bp.route('/eliminar_seleccionados', methods=['POST'])
+@login_required
+def eliminar_seleccionados():
+    """
+    Recibe JSON con: { "ids_carrito": [1, 2, 5, ...] }
+    y elimina de la tabla Carrito todos los registros cuyo id esté en esa lista
+    y pertenezcan al usuario logueado.
+    """
+    data = request.get_json() or {}
+    ids = data.get('ids_carrito', [])
+    if not isinstance(ids, list) or not ids:
+        return jsonify({'success': False, 'error': 'No se recibieron IDs válidos'}), 400
+
+    try:
+        deleted = (
+            Carrito.query
+                   .filter(Carrito.id.in_(ids), Carrito.user_id == current_user.idUser)
+                   .delete(synchronize_session=False)
+        )
+        db.session.commit()
+        return jsonify({'success': True, 'deleted_count': deleted})
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception("Error eliminando productos seleccionados")
+        return jsonify({'success': False, 'error': 'Error al eliminar del carrito'}), 500

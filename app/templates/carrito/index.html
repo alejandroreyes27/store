@@ -1,406 +1,373 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito de Compras</title>
-  <!-- Estilos -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='all.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='carrito/index.css') }}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <!-- Menú (se mantiene el mismo) -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-        <!-- Botón de Hamburguesa -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Contenedor del Menú -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
-                </li>
-                {% if current_user.rolUser == 'administrador' %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="material-icons">account_circle</i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center"
-                            href="{{ url_for('facturacion.facturas_index') }}">
-                            Facturas
-                            {% if pendientes_facturas > 0 %}
-                                <span class="badge bg-danger">{{ pendientes_facturas }}</span>
-                            {% endif %}
-                            </a>
-                        </li>
-                        <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
-                        </ul>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Carrito de Compras</title>
+      <!-- Estilos -->
+      <link rel="stylesheet" href="{{ url_for('static', filename='all.min.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='carrito/index.css') }}">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+      <!-- Menú (se mantiene el mismo) -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- Botón de Hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Contenedor del Menú -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
                     </li>
-                {% endif %}
-                <!-- Ícono de Carrito -->
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
-                        <i class="material-icons">shopping_cart</i>
-                    </a>
-                </li>
-            </ul>
-            <!-- Usuario y Cerrar Sesión -->
-            <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
+                    {% if current_user.rolUser == 'administrador' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons">account_circle</i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                href="{{ url_for('facturacion.facturas_index') }}">
+                                Facturas
+                                {% if pendientes_facturas > 0 %}
+                                    <span class="badge bg-danger">{{ pendientes_facturas }}</span>
+                                {% endif %}
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <!-- Ícono de Carrito -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
+                            <i class="material-icons">shopping_cart</i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Usuario y Cerrar Sesión -->
+                <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container mt-5">
-  <h2 class="text-center">🛒 Mi Carrito</h2>
-  
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-success">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-  
-  {% if data %}
-    <table class="table table-striped align-middle">
-      <thead>
-        <tr>
-          <th class="select-col">Elegir</th>
-          <th>Imagen</th>
-          <th>Producto</th>
-          <th>Talla</th>
-          <th>Cantidad</th>
-          <th>Precio Unitario</th>
-          <th>Total</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in data %}
-        <tr data-id="{{ item.idCarrito }}" data-producto-id="{{ item.producto.idProducto }}" data-precio="{{ item.producto.precioProducto }}">          <td class="select-col">
-            <input type="checkbox" class="select-product">
-          </td>
-          <td>
-            <img src="{{ url_for('static', filename=item.producto.imagenProducto) }}" 
-                 alt="Imagen del producto" class="product-image">
-          </td>
-          <td>{{ item.producto.nombreProducto }}</td>
-          <!-- NUEVO: Campo editable de talla --><
-          <td>
-            <select class="form-select form-select-sm size-select">
-              {% for option in [38.5, 39.5, 40, 41, 42, 43, 43.5, 44.5] %}
-                <option value="{{ option }}" {% if option == item.talla %}selected{% endif %}>
-                  {{ option }}
-                </option>
-              {% endfor %}
-            </select>
-          </td>
-          <td>
-            <div class="input-group">
-              <button class="btn btn-outline-secondary btn-decrease" type="button">-</button>
-              <input type="text" class="form-control text-center quantity-input" 
-                     value="{{ item.cantidad }}" readonly style="max-width: 60px;">
-              <button class="btn btn-outline-secondary btn-increase" type="button">+</button>
-            </div>
-          </td>
-          <td>$ {{ "{:,.0f}".format(item.producto.precioProducto).replace(",", ".") }}</td>
-          <td class="row-total">
-            $ {{ "{:,.0f}".format(item.cantidad * item.producto.precioProducto).replace(",", ".") }}
-          </td>
-          <td>
-            <form action="{{ url_for('carrito.delete', id=item.idCarrito) }}" method="POST" style="display: inline;">
-              <button type="submit" class="btn btn-danger" 
-                      onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
-                      <i class="material-icons">delete</i>
-              </button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    
-    <!-- Botón de compra y total -->
-    <div class="total-selected-wrapper mt-4 d-flex justify-content-between">
-      <button id="btn-comprar" class="btn btn-success">Completar Compra</button>
-      <span id="selected-total">$ 0</span>
-    </div>
+    <div class="container mt-5">
+      <h2 class="text-center">🛒 Mi Carrito</h2>
+      
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      {% if data %}
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th class="select-col">Elegir</th>
+              <th>Imagen</th>
+              <th>Producto</th>
+              <th>Talla</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in data %}
+            <tr data-id="{{ item.idCarrito }}" data-producto-id="{{ item.producto.idProducto }}" data-precio="{{ item.producto.precioProducto }}"><td class="select-col">
+                <input type="checkbox" class="select-product">
+              </td>
+              <td>
+                <img src="{{ url_for('static', filename=item.producto.imagenProducto) }}" 
+                    alt="Imagen del producto" class="product-image">
+              </td>
+              <td>{{ item.producto.nombreProducto }}</td>
+              <!-- NUEVO: Campo editable de talla -->
+              <td>
+                <select class="form-select form-select-sm size-select">
+                  {% for option in [38.5, 39.5, 40, 41, 42, 43, 43.5, 44.5] %}
+                    <option value="{{ option }}" {% if option == item.talla %}selected{% endif %}>
+                      {{ option }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td>
+                <div class="input-group">
+                  <button class="btn btn-outline-secondary btn-decrease" type="button">-</button>
+                  <input type="text" class="form-control text-center quantity-input" 
+                        value="{{ item.cantidad }}" readonly style="max-width: 60px;">
+                  <button class="btn btn-outline-secondary btn-increase" type="button">+</button>
+                </div>
+              </td>
+              <td>$ {{ "{:,.0f}".format(item.producto.precioProducto).replace(",", ".") }}</td>
+              <td class="row-total">
+                $ {{ "{:,.0f}".format(item.cantidad * item.producto.precioProducto).replace(",", ".") }}
+              </td>
+              <td>
+                <form action="{{ url_for('carrito.delete', id=item.idCarrito) }}" method="POST" style="display: inline;">
+                  <button type="submit" class="btn btn-danger" 
+                          onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+                          <i class="material-icons">delete</i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <!-- Botón de compra y total -->
+        <div class="total-selected-wrapper mt-4 d-flex justify-content-between">
+          <button id="btn-comprar" class="btn btn-success">Completar Compra</button>
+          <span id="selected-total">$ 0</span>
+        </div>
 
-      <!-- Modal -->
-      <div class="modal fade" id="invoicePreviewModal" tabindex="-1" aria-labelledby="invoicePreviewLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="invoicePreviewLabel">Vista Previa de la Factura</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="invoicePreviewContent">
-              <!-- Contenido dinámico aquí -->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-success" id="downloadPdfBtn">Descargar PDF</button>
-              <button type="button" class="btn btn-primary ms-2" id="continueShoppingBtn">Seguir Comprando</button>
+          <!-- Modal -->
+          <div class="modal fade" id="invoicePreviewModal" tabindex="-1" aria-labelledby="invoicePreviewLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="invoicePreviewLabel">Vista Previa de la Factura</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="invoicePreviewContent">
+                  <!-- Contenido dinámico aquí -->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                  <button type="button" class="btn btn-success" id="downloadPdfBtn">Descargar PDF</button>
+                  <button type="button" class="btn btn-primary ms-2" id="continueShoppingBtn">Seguir Comprando</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
       </div>
-  </div>
 
-    {% else %}
-      <p class="text-center emp ty-cart-message">Tu carrito está vacío 😢</p>
-      <div class="text-center mt-4">
-        <a href="{{ url_for('productos.index') }}" class="seguir-comprando-btn">
-          Explorar Productos
-        </a>
+        {% else %}
+          <p class="text-center emp ty-cart-message">Tu carrito está vacío 😢</p>
+          <div class="text-center mt-4">
+            <a href="{{ url_for('productos.index') }}" class="seguir-comprando-btn">
+              Explorar Productos
+            </a>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
-  </div>
 
-  <div class="footer text-center mt-5">
-    <p>&copy; 2025 Empresa. Todos los derechos reservados.</p>
-  </div>
+      <div class="footer text-center mt-5">
+        <p>&copy; 2025 Empresa. Todos los derechos reservados.</p>
+      </div>
 
-  <script>
-    // Variables globales para almacenamiento
-    let idsSeleccionadosParaFacturar = [];
-    let pdfBase64 = null;
-  
-    // Función para calcular el total de los productos seleccionados
-    const calcularTotalSeleccionado = () => {
-      let total = 0;
-      document.querySelectorAll('tr[data-id]').forEach(row => {
-        const checkbox = row.querySelector('.select-product');
-        if (checkbox.checked) {
-          const qty = parseInt(row.querySelector('.quantity-input').value);
-          const precioUnit = parseFloat(row.getAttribute('data-precio'));
-          total += qty * precioUnit;
-        }
-      });
-      document.getElementById('selected-total').textContent = '$ ' + 
-        total.toLocaleString('de-DE', { maximumFractionDigits: 0 });
-    };
-  
-    // Función para actualizar cantidad y enviar a backend
-    document.querySelectorAll('tr[data-id]').forEach(row => {
-      const decreaseBtn = row.querySelector('.btn-decrease');
-      const increaseBtn = row.querySelector('.btn-increase');
-      const qtyInput = row.querySelector('.quantity-input');
-      const precioUnit = parseFloat(row.getAttribute('data-precio'));
-
-      const actualizarFila = () => {
-        const qty = parseInt(qtyInput.value);
-        const total = qty * precioUnit;
-        row.querySelector('.row-total').textContent = '$ ' + 
-          total.toLocaleString('de-DE', { maximumFractionDigits: 0 });
-        calcularTotalSeleccionado();
-
-        // Enviar a backend
-        fetch('{{ url_for("carrito.update_cantidad", id=0) }}'.replace('0', row.getAttribute('data-id')), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cantidad: qty })
-        }).catch(err => console.error('Error:', err));
-      };
-
-      decreaseBtn.addEventListener('click', () => {
-        let qty = parseInt(qtyInput.value);
-        if (qty > 1) {
-          qty--;
-          qtyInput.value = qty;
-          actualizarFila();
-        }
-      });
-
-      increaseBtn.addEventListener('click', () => {
-        let qty = parseInt(qtyInput.value);
-        qty++;
-        qtyInput.value = qty;
-        actualizarFila();
-      });
-
-      // ✅ Nuevo: Evento para actualizar talla
-      row.querySelector('.size-select').addEventListener('change', async function () {
-        const cartId = row.getAttribute('data-id');
-        const nuevaTalla = this.value;
-
-        try {
-          const response = await fetch('/carrito/edit_talla', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idCarrito: cartId, talla: nuevaTalla })
-          });
-
-          if (!response.ok) throw new Error('Error al actualizar la talla');
-        } catch (error) {
-          console.error(error);
-          alert('No se pudo actualizar la talla');
-        }
-      });
-    });
-  
-    // Listener para checkbox de selección
-    document.querySelectorAll('.select-product').forEach(checkbox => {
-      checkbox.addEventListener('change', calcularTotalSeleccionado);
-    });
-  
-    // Función para manejar la compra con modal
-      document.getElementById('btn-comprar').addEventListener('click', async function() {
-        const items = [];
-        document.querySelectorAll('tr[data-id]').forEach(row => {
+      <script>
+        // 1) Variables globales
+        let idsSeleccionadosParaFacturar = [];
+        let pdfBase64 = null;
+      
+        // 2) Recalcula selección y total
+        const calcularTotalSeleccionado = () => {
+          let total = 0;
+          idsSeleccionadosParaFacturar = [];
+      
+          document.querySelectorAll('tr[data-id]').forEach(row => {
+            const idCarrito = parseInt(row.dataset.id, 10);
             const checkbox = row.querySelector('.select-product');
             if (checkbox.checked) {
-                // Obtener el ID del producto real
-                const productoId = row.getAttribute('data-producto-id');
-                const talla = row.querySelector('.size-select').value;
-                items.push({
-                    product_id: productoId,  // Usar el ID del producto real
-                    cantidad: parseInt(row.querySelector('.quantity-input').value),
-                    precio_unitario: parseFloat(row.getAttribute('data-precio')),
-                    producto: row.querySelector('td:nth-child(3)').textContent.trim(),
-                    talla: talla
-                });
+              idsSeleccionadosParaFacturar.push(idCarrito);
+              const qty = parseInt(row.querySelector('.quantity-input').value, 10);
+              const precio = parseFloat(row.dataset.precio);
+              total += qty * precio;
             }
+          });
+      
+          document.getElementById('selected-total').textContent =
+            '$ ' + total.toLocaleString('de-DE', { maximumFractionDigits: 0 });
+        };
+      
+        // 3) Listeners en checkboxes
+        document.querySelectorAll('.select-product').forEach(chk =>
+          chk.addEventListener('change', calcularTotalSeleccionado)
+        );
+      
+        // 4) Actualización de cantidad y talla, y recalculo
+        document.querySelectorAll('tr[data-id]').forEach(row => {
+          const cartId = row.dataset.id;
+          const precioUnit = parseFloat(row.dataset.precio);
+          const qtyInput = row.querySelector('.quantity-input');
+          const decreaseBtn = row.querySelector('.btn-decrease');
+          const increaseBtn = row.querySelector('.btn-increase');
+          const sizeSelect = row.querySelector('.size-select');
+      
+          // Helper para actualizar la fila
+          const actualizarFila = async () => {
+            const qty = parseInt(qtyInput.value, 10);
+            // Actualiza total en pantalla
+            row.querySelector('.row-total').textContent =
+              '$ ' + (qty * precioUnit).toLocaleString('de-DE', { maximumFractionDigits: 0 });
+            calcularTotalSeleccionado();
+      
+            // Notifica al backend el cambio de cantidad
+            try {
+              await fetch('{{ url_for("carrito.update_cantidad", id=0) }}'.replace('0', cartId), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cantidad: qty })
+              });
+            } catch (e) {
+              console.error('Error actualizando cantidad:', e);
+            }
+          };
+      
+          decreaseBtn.addEventListener('click', () => {
+            let qty = parseInt(qtyInput.value, 10);
+            if (qty > 1) {
+              qtyInput.value = qty - 1;
+              actualizarFila();
+            }
+          });
+      
+          increaseBtn.addEventListener('click', () => {
+            let qty = parseInt(qtyInput.value, 10);
+            qtyInput.value = qty + 1;
+            actualizarFila();
+          });
+      
+          // Cambio de talla
+          sizeSelect.addEventListener('change', async () => {
+            const nuevaTalla = sizeSelect.value;
+            try {
+              const resp = await fetch('{{ url_for("carrito.edit_talla") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idCarrito: cartId, talla: nuevaTalla })
+              });
+              if (!resp.ok) throw new Error('Backend rechazó la talla');
+            } catch (e) {
+              console.error('Error actualizando talla:', e);
+              alert('No se pudo actualizar la talla');
+            }
+          });
         });
-  
-      if(items.length === 0) {
-        alert("Selecciona al menos un producto.");
-        return;
-      }
-  
-      try {
-        const response = await fetch('{{ url_for("facturacion.comprar") }}', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: items })
-        });
-  
-        if (!response.ok) {
-          // Intentamos extraer un mensaje de error JSON
-          let errText;
-          try {
-            const errJson = await response.json();
-            errText = errJson.error || JSON.stringify(errJson);
-          } catch {
-            // Si no es JSON, leemos como texto
-            errText = await response.text();
+      
+        // 5) Completar compra → genera factura y muestra modal
+        document.getElementById('btn-comprar').addEventListener('click', async () => {
+          // Aseguramos que idsSeleccionados estén calculados
+          calcularTotalSeleccionado();
+          if (idsSeleccionadosParaFacturar.length === 0) {
+            alert("Selecciona al menos un producto.");
+            return;
           }
-          throw new Error(errText);
-        }
-        
-        const data = await response.json();
-        const invoiceData = data.invoice_data;
-        pdfBase64 = data.pdf_base64; // Almacenamiento global
-  
-        // Construir contenido del modal
-        const modalContent = `
-          <div class="invoice-preview">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Talla</th>
-                  <th>Cantidad</th>
-                  <th>Precio Unitario</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${invoiceData.items.map(item => `
+      
+          // Construye payload
+          const items = idsSeleccionadosParaFacturar.map(idCarrito => {
+            const row = document.querySelector(`tr[data-id="${idCarrito}"]`);
+            return {
+              product_id: parseInt(row.dataset.productoId, 10),
+              cantidad: parseInt(row.querySelector('.quantity-input').value, 10),
+              precio_unitario: parseFloat(row.dataset.precio),
+              producto: row.querySelector('td:nth-child(3)').textContent.trim(),
+              talla: row.querySelector('.size-select').value
+            };
+          });
+      
+          try {
+            const resp = await fetch('{{ url_for("facturacion.comprar") }}', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items })
+            });
+            if (!resp.ok) throw new Error((await resp.json()).error || resp.statusText);
+            const data = await resp.json();
+      
+            // Guarda el PDF y construye tabla
+            pdfBase64 = data.pdf_base64;
+            const htmlItems = data.invoice_data.items.map(it => `
+              <tr>
+                <td>${it.producto}</td>
+                <td>${it.talla}</td>
+                <td>${it.cantidad}</td>
+                <td>$${it.precio_unitario.toLocaleString('de-DE')}</td>
+                <td>$${(it.cantidad * it.precio_unitario).toLocaleString('de-DE')}</td>
+              </tr>
+            `).join('');
+      
+            document.getElementById('invoicePreviewContent').innerHTML = `
+              <table class="table">
+                <thead>
                   <tr>
-                    <td>${item.producto}</td>
-                    <td>${item.talla}</td>
-                    <td>${item.cantidad}</td>
-                    <td>$${item.precio_unitario.toLocaleString('de-DE')}</td>
-                    <td>$${(item.cantidad * item.precio_unitario).toLocaleString('de-DE')}</td>
+                    <th>Producto</th><th>Talla</th><th>Cantidad</th>
+                    <th>Precio Unitario</th><th>Total</th>
                   </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-  
-        // Mostrar el modal
-        document.getElementById('invoicePreviewContent').innerHTML = modalContent;
-        const myModal = new bootstrap.Modal(document.getElementById('invoicePreviewModal'));
-        myModal.show();
-  
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Ocurrió un error durante la compra.");
-      }
-    });
-  
-    // Función para limpiar solo los productos seleccionados
-    const limpiarSeleccionados = async (idsCarrito) => {
-      try {
-        const response = await fetch('{{ url_for("carrito.eliminar_seleccionados") }}', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ids_carrito: idsCarrito }) // Cambiado a ids_carrito
+                </thead>
+                <tbody>${htmlItems}</tbody>
+              </table>
+            `;
+      
+            new bootstrap.Modal(document.getElementById('invoicePreviewModal')).show();
+      
+          } catch (e) {
+            console.error('Error en compra:', e);
+            alert("Ocurrió un error durante la compra: “" + e.message + "”");
+          }
         });
-        
-        return response.ok;
-      } catch (error) {
-        console.error("Error:", error);
-        return false;
-      }
-    };
-  
-    // Evento para "Seguir Comprando"
-    document.getElementById('continueShoppingBtn').addEventListener('click', async () => {
-      const exito = await limpiarSeleccionados(idsSeleccionadosParaFacturar);
-      if (exito) {
-        window.location.href = '{{ url_for("productos.index") }}';
-      } else {
-        alert("No se pudieron limpiar los productos seleccionados");
-      }
-    });
-  
-    // Modificar evento de descarga de PDF para limpiar carrito
-    document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
-      if (!pdfBase64) {
-        alert("No se ha generado el PDF aún.");
-        return;
-      }
-  
-      try {
-        const byteCharacters = atob(pdfBase64);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'factura.pdf';
-        a.click();
-        URL.revokeObjectURL(url);
-  
-        // Limpiar carrito después de la descarga
-        await limpiarSeleccionados(idsSeleccionadosParaFacturar);
-        
-        // Redirección con pequeño delay
-        setTimeout(() => {
-          window.location.href = '{{ url_for("productos.index") }}';
-        }, 1000);
-      } catch (error) {
-        console.error("Error al descargar el PDF:", error);
-        alert("Hubo un e  rror al descargar el PDF.");
-      }
-    });
-  
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+      
+        // 6) Función para limpiar ítems en backend
+        const limpiarSeleccionados = async (ids) => {
+          try {
+            const resp = await fetch('{{ url_for("carrito.eliminar_seleccionados") }}', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ids_carrito: ids })
+            });
+            return resp.ok;
+          } catch {
+            return false;
+          }
+        };
+      
+        // 7) “Seguir Comprando” limpia y redirige
+        document.getElementById('continueShoppingBtn').addEventListener('click', async () => {
+          const ok = await limpiarSeleccionados(idsSeleccionadosParaFacturar);
+          if (ok) window.location.href = '{{ url_for("productos.index") }}';
+          else alert("No se pudieron limpiar los productos seleccionados");
+        });
+      
+        // 8) Descargar PDF limpia y redirige después
+        document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
+          if (!pdfBase64) {
+            alert("No se ha generado el PDF aún.");
+            return;
+          }
+          // Descarga
+          const bin = atob(pdfBase64);
+          const arr = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          const blob = new Blob([arr], { type: 'application/pdf' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'factura.pdf';
+          a.click();
+          URL.revokeObjectURL(a.href);
+      
+          // Limpia y redirige
+          const ok = await limpiarSeleccionados(idsSeleccionadosParaFacturar);
+          setTimeout(() => {
+            if (ok) window.location.href = '{{ url_for("productos.index") }}';
+            else alert("No se pudieron limpiar los productos seleccionados");
+          }, 500);
+        });
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>

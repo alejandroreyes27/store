@@ -163,13 +163,8 @@
                     {% for cat in categorias %}
                     <option value="{{ cat.idCategoria }}">{{ cat.nombreCategoria }}</option>
                     {% endfor %}
-                </select>
-                <div class="mb-3">
-                    <label for="talla" class="form-label">Talla</label>
-                    <input type="text" class="form-control" id="tallaInput" name="talla">
-                            value="{{ request.form.talla or '' }}">
                 </div>
-                </div>
+                <br>
                 <div class="mb-3">
                 <label class="form-label">Imagen</label>
                 <input type="file" class="form-control" name="imagenProducto">
