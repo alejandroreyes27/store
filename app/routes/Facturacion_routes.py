@@ -38,17 +38,18 @@ def facturas_index():
 @bp.route('/facturas/<int:id>')
 @login_required
 def ver(id):
-    # Sólo admin
     if current_user.rolUser != 'administrador':
         flash('Acceso denegado.', 'warning')
         return redirect(url_for('productos.index'))
 
     factura = Factura.query.get_or_404(id)
-    detalles = factura.detalles  # lista de DetalleFactura
+    detalles = factura.detalles
 
-    return render_template('facturacion/ver.html',
-                        factura=factura,
-                        detalles=detalles)
+    # Detectar si es una solicitud AJAX
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render_template('_ver.html', factura=factura, detalles=detalles)
+    
+    return render_template('facturacion/ver.html', factura=factura, detalles=detalles)
     
 @bp.route('/facturas/<int:id>/marcar')
 @login_required
