@@ -95,13 +95,13 @@
               <td>{{ item.producto.nombreProducto }}</td>
               <!-- NUEVO: Campo editable de talla -->
               <td>
-                <select class="form-select form-select-sm size-select">
-                  {% for option in [38.5, 39.5, 40, 41, 42, 43, 43.5, 44.5] %}
-                    <option value="{{ option }}" {% if option == item.talla %}selected{% endif %}>
-                      {{ option }}
-                    </option>
-                  {% endfor %}
-                </select>
+<select class="form-select form-select-sm size-select">
+  {% for option in [38.5, 39.5, 40, 41, 42, 43, 43.5, 44.5] %}
+    <option value="{{ option }}" {% if option == item.talla|float %}selected{% endif %}>
+      {{ option }}
+    </option>
+  {% endfor %}
+</select>
               </td>
               <td>
                 <div class="input-group">
