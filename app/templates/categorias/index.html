@@ -1,136 +1,211 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Categorías</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Listado de Categorías</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='categorias/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='icons/icon.css') }}" />
 </head>
 <body class="bg-light">
-    
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <!-- Botón de Hamburguesa -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Contenedor del Menú -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
-                    </li>
-                    {% if current_user.rolUser == 'administrador' %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="material-icons">account_circle</i>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                href="{{ url_for('facturacion.facturas_index') }}">
-                                Facturas
-                                {% if pendientes_facturas > 0 %}
-                                    <span class="badge bg-danger">{{ pendientes_facturas }}</span>
-                                {% endif %}
-                                </a>
-                            </li>
-                            <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                    <!-- Ícono de Carrito -->
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
-                            <i class="material-icons">shopping_cart</i>
-                        </a>
-                    </li>
-                </ul>
-                <!-- Usuario y Cerrar Sesión -->
-                <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
-                <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Listado de Categorías</h2>
-        <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Agregar Nueva Categoría</button>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for categoria in categorias %}
-                    <tr>
-                        <td>{{ categoria.idCategoria }}</td>
-                        <td>{{ categoria.nombreCategoria }}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ categoria.idCategoria }}"><i class="material-icons">mode_edit</i></button>
-                            <a href="{{ url_for('categoria.delete', id=categoria.idCategoria) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta categoría?')"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    
-                    <!-- Modal Editar Categoría -->
-                    <div class="modal fade" id="editCategoryModal{{ categoria.idCategoria }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Editar Categoría</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="POST" action="{{ url_for('categoria.edit', id=categoria.idCategoria) }}">
-                                        <div class="mb-3">
-                                            <label for="nombreCategoria" class="form-label">Nombre:</label>
-                                            <input type="text" name="nombreCategoria" class="form-control" value="{{ categoria.nombreCategoria }}" required>
-                                        </div>
-                                        <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  <!-- Navbar (sin modificaciones) -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ url_for('productos.index') }}">Home</a>
+          </li>
+          {% if current_user.rolUser == 'administrador' %}
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle text-white"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="material-icons">account_circle</i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a 
+                  class="dropdown-item d-flex justify-content-between align-items-center"
+                  href="{{ url_for('facturacion.facturas_index') }}"
+                >
+                  Facturas
+                  {% if pendientes_facturas > 0 %}
+                  <span class="badge bg-danger">{{ pendientes_facturas }}</span>
+                  {% endif %}
+                </a>
+              </li>
+              <li><a class="dropdown-item" href="{{ url_for('categoria.index') }}">Categorías</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('auth.dashboard') }}">Usuarios Registrados</a></li>
+            </ul>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
+              <i class="material-icons">shopping_cart</i>
+            </a>
+          </li>
+        </ul>
+        <span class="navbar-text text-white"> {{ current_user.nameUser }}</span>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ms-2">Cerrar Sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="m-0">Categorías</h2>
+      <button
+        class="btn btn-success btn-add"
+        data-bs-toggle="modal"
+        data-bs-target="#addCategoryModal"
+      >
+        <i class="material-icons align-middle">add_circle</i>
+        <span class="align-middle">Nueva Categoría</span>
+      </button>
     </div>
 
-    <!-- Modal Agregar Categoría -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="table-responsive shadow-sm rounded">
+      <table class="table table-custom table-striped text-center mb-0">
+        <thead class>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for categoria in categorias %}
+          <tr>
+            <td>{{ categoria.idCategoria }}</td>
+            <td class="fw-semibold">{{ categoria.nombreCategoria }}</td>
+            <td>
+              <button
+                class="btn btn-warning btn-edit me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#editCategoryModal{{ categoria.idCategoria }}"
+                title="Editar"
+              >
+                <i class="material-icons">mode_edit</i>
+              </button>
+              <a
+                href="{{ url_for('categoria.delete', id=categoria.idCategoria) }}"
+                class="btn btn-danger btn-delete"
+                onclick="return confirm('¿Eliminar esta categoría?')"
+                title="Eliminar"
+              >
+                <i class="material-icons">delete</i>
+              </a>
+            </td>
+          </tr>
+
+          <!-- Modal Editar Categoría -->
+          <div
+            class="modal fade"
+            id="editCategoryModal{{ categoria.idCategoria }}"
+            tabindex="-1"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Agregar Nueva Categoría</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  <h5 class="modal-title">Editar Categoría</h5>
+                  <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                  ></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ url_for('categoria.add') }}">
-                        <div class="mb-3">
-                            <label for="nombreCategoria" class="form-label">Nombre de la Categoría:</label>
-                            <input type="text" name="nombreCategoria" class="form-control" required>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </form>
+                  <form
+                    method="POST"
+                    action="{{ url_for('categoria.edit', id=categoria.idCategoria) }}"
+                  >
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="editNombre{{ categoria.idCategoria }}"
+                        name="nombreCategoria"
+                        placeholder="Nombre de la Categoría"
+                        value="{{ categoria.nombreCategoria }}"
+                        required
+                      />
+                      <label for="editNombre{{ categoria.idCategoria }}"
+                        >Nombre de la Categoría</label
+                      >
+                    </div>
+                    <div class="d-flex justify-content-end">
+                      <button type="submit" class="btn btn-success">
+                        Guardar Cambios
+                      </button>
+                    </div>
+                  </form>
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Modal Agregar Categoría -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Nueva Categoría</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{{ url_for('categoria.add') }}">
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="newNombreCategoria"
+                name="nombreCategoria"
+                placeholder="Nombre de la Categoría"
+                required
+              />
+              <label for="newNombreCategoria"
+                >Nombre de la Categoría</label
+              >
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

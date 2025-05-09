@@ -1,14 +1,45 @@
-.table thead {
-    background-color: #343a40;
-    color: white;
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
-.btn-group-custom {
-    display: flex;
-    gap: 10px;
+/* Botones */
+.btn-add {
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
 }
-.container-custom {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.btn-edit,
+.btn-delete {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+/* Tabla personalizada */
+.table-custom thead {
+  background-color: #2a9d8f;
+}
+.table-custom th,
+.table-custom td {
+  vertical-align: middle;
+  border-color: #e9ecef;
+}
+.table-custom tbody tr:hover {
+  background-color: #f1f7f6;
+}
+/* Modal Headers */
+.modal-header {
+  background-color: #007BFF;
+  color: #fff;
+  border-bottom: none;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+/* Form Floating Labels */
+.form-floating > .form-control:focus ~ label {
+  opacity: 0.65;
+  transform: scale(0.9) translateY(-1.5rem);
 }
