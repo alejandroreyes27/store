@@ -44,11 +44,14 @@
                             </ul>
                         </li>
                     {% endif %}
-                    <!-- Ícono de Carrito -->
+                    <!-- Ícono de Carrito con contador -->
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
-                            <i class="material-icons">shopping_cart</i>
-                        </a>
+                      <a class="nav-link text-white" href="{{ url_for('carrito.index') }}">
+                        <i class="material-icons">shopping_cart</i>
+                        <span id="cart-count" class="badge bg-danger" style="position: absolute; top: 0; right: 0;">
+                          {% if data %}{{ data|length }}{% else %}0{% endif %}
+                        </span>
+                      </a>
                     </li>
                 </ul>
                 <!-- Usuario y Cerrar Sesión -->
@@ -379,6 +382,21 @@
           });
           calcularTotalSeleccionado(); // Actualiza el total
         });
+        
+        function actualizarContadorCarrito() {
+          const cartCount = document.getElementById('cart-count');
+          if (cartCount) {
+            // Contar filas de productos en el carrito
+            const filasCarrito = document.querySelectorAll('tbody tr');
+            cartCount.textContent = filasCarrito.length;
+            
+            // Ocultar el contador si no hay productos
+            cartCount.style.display = filasCarrito.length > 0 ? 'inline-block' : 'none';
+          }
+        }
+
+        // Llamar a la función cuando se carga la página
+        document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
       </script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

@@ -125,3 +125,11 @@ def edit_talla():
         carrito.talla = data['talla']
         db.session.commit()
     return jsonify({'success': True})
+
+@bp.route('/carrito/count')
+def get_cart_count():
+    if current_user.is_authenticated:
+        # Usa el campo correcto de tu modelo Carrito (idUser o idUser_id)
+        count = Carrito.query.filter_by(idUser=current_user.idUser).count()
+        return jsonify({"count": count})
+    return jsonify({"count": 0})

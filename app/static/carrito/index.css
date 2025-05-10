@@ -133,4 +133,23 @@
     transform: scale(1.2);
     cursor: pointer;
   }
-  
+
+.nav-link {
+  position: relative;
+}
+
+#cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  font-size: 10px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  padding: 0;
+  display: none; /* Oculto por defecto */
+}
