@@ -155,3 +155,21 @@ def delete(id):
         flash(f'Error al eliminar el producto: {str(e)}', 'error')
 
     return redirect(url_for('productos.index'))
+
+@bp.route('/mercado')
+@login_required
+def index_mercado():
+
+    data_mercado = Productos.query.filter_by(activo=True).all()
+    categorias = Categoria.query.all()
+    
+    return render_template('productos/mercado.html', data_producto=data_mercado, categorias=categorias,user=current_user)
+
+@bp.route('/mercado2')
+@login_required
+def index_mercado2():
+
+    data_mercado = Productos.query.filter_by(activo=True).all()
+    categorias = Categoria.query.all()
+    
+    return render_template('productos/mercado2.html', data_producto=data_mercado, categorias=categorias,user=current_user)

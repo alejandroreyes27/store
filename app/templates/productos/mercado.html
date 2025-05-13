@@ -1,0 +1,283 @@
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Mercado Libre Replica
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+    font-family: 'Montserrat', sans-serif;
+  }
+  </style>
+ </head>
+ <body class="bg-gray-200">
+  <!-- Top yellow bar -->
+  <header class="bg-yellow-400">
+   <div class="max-w-[1280px] mx-auto px-4">
+    <div class="flex items-center justify-between h-20">
+     <!-- Left side: logo and location -->
+     <div class="flex items-start relative">
+      <div class="flex flex-col items-center mr-3 pt-1">
+       <img alt="Mercado Libre handshake logo icon in white background" class="w-10 h-10" height="40" src="https://storage.googleapis.com/a1aa/image/bf5cf991-4fed-4b1e-3747-92c6644cc002.jpg" width="40"/>
+       <img alt="Mercado Libre text logo in white background" class="w-[80px] h-[20px] -mt-1" height="20" src="https://storage.googleapis.com/a1aa/image/25994fc2-ff9e-412d-317c-e831cc3a2926.jpg" width="80"/>
+      </div>
+      <div class="text-xs text-black pt-1 pl-1 cursor-pointer select-none">
+       <div class="flex items-center space-x-1">
+        <svg aria-hidden="true" class="w-4 h-4 text-black" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" stroke-linecap="round" stroke-linejoin="round">
+         </path>
+         <path d="M12 21c-4.418 0-8-3.582-8-8 0-3.866 3.134-7 7-7s7 3.134 7 7c0 4.418-3.582 8-8 8z" stroke-linecap="round" stroke-linejoin="round">
+         </path>
+        </svg>
+        <span class="leading-4 font-normal">
+         Ingresa tu
+        </span>
+       </div>
+       <div class="font-bold leading-4">
+        ubicación
+       </div>
+      </div>
+      <!-- Location popup -->
+      <div class="absolute top-14 left-0 bg-white rounded-md shadow-md p-4 w-[280px] text-sm text-gray-900 z-10" style="font-family: 'Montserrat', sans-serif;">
+       <p class="font-bold mb-1">
+        Conoce el envío a tu ubicación
+       </p>
+       <p class="mb-3 leading-tight">
+        Agrega tu ubicación para ver costos y tiempos de entrega precisos en tu búsqueda.
+       </p>
+       <div class="flex items-center space-x-4">
+        <button class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded" type="button">
+         Agregar ubicación
+        </button>
+        <button class="text-blue-600 text-xs font-semibold" type="button">
+         Más tarde
+        </button>
+       </div>
+      </div>
+     </div>
+     <!-- Search bar -->
+     <form aria-label="Buscar productos, marcas y más" class="flex items-center flex-grow max-w-[600px] mx-4" role="search">
+      <input aria-label="Buscar productos, marcas y más" class="flex-grow h-10 px-3 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Buscar productos, marcas y más..." type="search"/>
+      <button aria-label="Buscar" class="bg-white border border-l-0 border-gray-300 rounded-r-md h-10 w-10 flex items-center justify-center" type="submit">
+       <i class="fas fa-search text-gray-600">
+       </i>
+      </button>
+     </form>
+     <!-- Right side top button -->
+     <div class="flex items-center space-x-4">
+      <button aria-label="Envío gratis en tu primera compra exclusivo en app" class="bg-[#1a237e] text-white text-xs font-bold rounded-full px-4 py-2 flex items-center space-x-2">
+       <span>
+        ENVÍO GRATIS
+       </span>
+       <span class="bg-white text-[#1a237e] text-[9px] font-bold rounded-full px-2 py-1 uppercase leading-none">
+        EN TU PRIMERA COMPRA
+       </span>
+       <span class="bg-white text-[#1a237e] text-[9px] font-bold rounded-full px-2 py-1 uppercase leading-none">
+        EXCLUSIVO EN APP
+       </span>
+      </button>
+     </div>
+    </div>
+    <!-- Navigation links below search -->
+    <nav aria-label="Main navigation" class="flex items-center justify-between text-xs text-black font-normal border-t border-yellow-300 py-1">
+     <ul class="flex space-x-4 items-center">
+      <li class="relative group cursor-pointer">
+       <span class="font-normal">
+        Categorías
+       </span>
+       <i class="fas fa-chevron-down text-xs ml-1">
+       </i>
+      </li>
+      <li>
+       Ofertas
+      </li>
+      <li>
+       Cupones
+      </li>
+      <li class="flex items-center space-x-1">
+       <span>
+        Supermercado
+       </span>
+       <span class="bg-blue-500 text-white text-[8px] font-bold rounded-full px-1 py-[1px] uppercase leading-none">
+        nuevo
+       </span>
+      </li>
+      <li>
+       Moda
+      </li>
+      <li class="flex items-center space-x-1">
+       <span>
+        Mercado Play
+       </span>
+       <span class="bg-green-400 text-white text-[8px] font-bold rounded-full px-1 py-[1px] uppercase leading-none">
+        gratis
+       </span>
+      </li>
+      <li>
+       Vender
+      </li>
+      <li>
+       Ayuda
+      </li>
+     </ul>
+     <ul class="flex space-x-6 text-xs font-normal">
+      <li>
+       Crea tu cuenta
+      </li>
+      <li>
+       Ingresa
+      </li>
+      <li>
+       Mis compras
+      </li>
+      <li>
+       <i class="fas fa-shopping-cart text-lg">
+       </i>
+      </li>
+     </ul>
+    </nav>
+   </div>
+  </header>
+  <!-- Hero section with background image and text -->
+  <section class="relative bg-yellow-400">
+   <img alt="Man holding a Mercado Libre cardboard box on a bright yellow background" class="w-full object-cover max-h-[400px]" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/da7d3ef0-5c57-4906-ac5d-0d0b28db05d3.jpg" width="1280"/>
+   <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4" style="font-family: 'Montserrat', sans-serif;">
+    <h1 class="text-5xl font-extrabold text-black leading-tight max-w-[900px]">
+     ENVÍO GRATIS
+    </h1>
+    <h2 class="text-2xl font-bold text-black mt-1 max-w-[900px]">
+     EN TU
+     <span class="font-extrabold">
+      PRIMERA COMPRA
+     </span>
+    </h2>
+    <button aria-label="Exclusivo en app" class="mt-4 bg-gray-900 text-white text-lg font-semibold rounded-md px-6 py-2 flex items-center space-x-2">
+     <span>
+      EXCLUSIVO EN
+     </span>
+     <span class="font-extrabold">
+      APP
+     </span>
+     <i class="fas fa-mobile-alt">
+     </i>
+    </button>
+    <p class="text-xs text-black mt-3 max-w-[900px]">
+     Hasta el 31/12/25. Ver más en https://www.mercadolibre.com.co/ayuda/28939
+    </p>
+    <div class="flex space-x-2 mt-2 text-black text-xs">
+     <span>
+      ●
+     </span>
+     <span>
+      ●
+     </span>
+     <span>
+      ●
+     </span>
+     <span>
+      ●
+     </span>
+     <span>
+      ●
+     </span>
+     <span>
+      ●
+     </span>
+    </div>
+   </div>
+  </section>
+  <!-- Cards row -->
+  <section class="max-w-[1280px] mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+   <!-- Card 1 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Ingresa a tu cuenta
+    </h3>
+    <img alt="Browser window with user icon in yellow background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/69c1f1c6-a75c-4b7f-6fbf-76ea5f743f82.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Disfruta de ofertas y compra sin límites.
+    </p>
+
+    <a href="{{ url_for('auth.login') }}" class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1">
+     <i class="fas fa-user-plus icon"></i> Iniciar sesión
+    </a>
+
+
+
+   </article>
+   <!-- Card 2 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Ingresa tu ubicación
+    </h3>
+    <img alt="Map with location pin icon in yellow background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/11142711-92da-48ed-4f6d-a47970df0f68.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Consulta costos y tiempos de entrega.
+    </p>
+    <button class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1" type="button">
+     Ingresar ubicación
+    </button>
+   </article>
+   <!-- Card 3 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Medios de pago
+    </h3>
+    <img alt="Wallet icon in yellow background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/cfa63c0c-1e3b-4034-bb37-fc0df5c969ac.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Paga tus compras de forma rápida y segura.
+    </p>
+    <button class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1" type="button">
+     Conocer medios de pago
+    </button>
+   </article>
+   <!-- Card 4 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Menos de
+     <span class="font-bold">
+      $40.000
+     </span>
+    </h3>
+    <img alt="Money coins icon on gray circular background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/24adf403-89af-4148-8d6b-86239fec5cc6.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Descubre productos con precios bajos.
+    </p>
+    <button class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1" type="button">
+     Mostrar productos
+    </button>
+   </article>
+   <!-- Card 5 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Más vendidos
+    </h3>
+    <img alt="Shopping bags icon in yellow background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/2a243e91-db95-49c3-8563-4481a4c4c0c2.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Explora los productos que son tendencia.
+    </p>
+    <button class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1" type="button">
+     Ir a Más vendidos
+    </button>
+   </article>
+   <!-- Card 6 -->
+   <article class="bg-white rounded-md shadow-md p-4 flex flex-col items-center text-center" style="font-family: 'Montserrat', sans-serif;">
+    <h3 class="font-semibold mb-2">
+     Compra protegida
+    </h3>
+    <img alt="Package with check mark icon on gray circular background" class="mb-3" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/6f4eadb3-a70c-4462-e231-37bc4c0375a1.jpg" width="80"/>
+    <p class="text-xs mb-4">
+     Puedes devolver tu compra gratis.
+    </p>
+    <button class="bg-blue-300 text-blue-700 text-xs font-semibold rounded px-3 py-1" type="button">
+     Cómo funciona
+    </button>
+   </article>
+  </section>
+ </body>
+</html>
