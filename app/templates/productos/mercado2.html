@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Mercado Libre Replica</title>
+    <script src="https://cdn.tailwindcss.com "></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css " rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat :wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <header class="bg-yellow-400 shadow-md">
+        <div class="container mx-auto px-4 py-2">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                <!-- Logo y ubicación -->
+                <div class="flex flex-col items-center md:items-start md:w-36">
+                    <a class="flex items-center gap-2 mt-1 group" href="#">
+                        <img alt="Icono de Mercado Libre" class="w-10 h-10 transition-transform group-hover:scale-110" 
+                             src="https://storage.googleapis.com/a1aa/image/ae9cea07-e404-4d84-0f2b-4e4810c9ddf8.jpg "/>
+                        <div class="text-yellow-900 font-bold text-sm leading-none">
+                            mercado<br>libre
+                        </div>
+                    </a>
+                    <div class="flex items-center gap-1 text-yellow-900 text-xs mt-1 cursor-pointer hover:underline">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Ingresa tu</span>
+                        <span class="font-semibold">ubicación</span>
+                    </div>
+                </div>
+
+                <!-- Barra de búsqueda -->
+                <form class="relative w-full max-w-lg mx-auto md:mx-0" role="search">
+                    <div class="flex">
+                        <input class="flex-grow rounded-l-md border border-gray-300 px-4 py-2 text-sm focus:outline-none 
+                                 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all" 
+                               placeholder="Buscar productos, marcas y más..." 
+                               type="search"/>
+                        <button class="bg-white border border-l-0 border-gray-300 rounded-r-md px-4 hover:bg-gray-50 
+                                  transition-colors" type="submit">
+                            <i class="fas fa-search text-gray-600"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Botón de envío gratis -->
+                <div class="flex justify-center md:justify-end">
+                    <button class="bg-blue-900 text-white font-bold text-xs rounded-full px-4 py-2 flex items-center gap-2 
+                              whitespace-nowrap hover:bg-blue-800 transition-colors">
+                        ENVÍO GRATIS
+                        <span class="bg-white text-blue-900 font-normal px-2 py-1 rounded-full text-[9px] leading-none">
+                            EN TU<strong>PRIMERA COMPRA</strong><br/>EXCLUSIVO EN APP
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navegación -->
+            <nav class="flex flex-wrap justify-center gap-3 text-yellow-900 text-sm py-3 select-none">
+                <!-- Categorías Dropdown -->
+                <div class="relative group">
+                    <a class="flex items-center gap-1 hover:underline cursor-pointer" href="#">
+                        Categorías <i class="fas fa-chevron-down text-xs"></i>
+                    </a>
+                    <ul class="absolute hidden group-hover:block bg-white text-gray-700 mt-2 py-2 rounded shadow-lg min-w-[200px]">
+                        <li>
+                            <a class="block px-4 py-1 hover:bg-gray-100" href="{{ url_for('productos.index') }}" data-categoria="">
+                                Todas las categorías
+                            </a>
+                        </li>
+                        {% for categoria in categorias %}
+                        <li>
+                            <a class="block px-4 py-1 hover:bg-gray-100" href="{{ url_for('productos.index_categoria', id=categoria.idCategoria) }}" data-categoria="{{ categoria.idCategoria }}">
+                                {{ categoria.nombreCategoria }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Otras Opciones de Navegación -->
+                <a class="hover:underline" href="#">Ofertas</a>
+                <a class="hover:underline" href="#">Cupones</a>
+                <a class="flex items-center gap-1 hover:underline" href="#">
+                    Supermercado <span class="bg-blue-600 text-white text-xs font-bold rounded px-2 py-0.5">NUEVO</span>
+                </a>
+                <a class="flex items-center gap-1 hover:underline" href="#">
+                    Mercado Play <span class="bg-green-600 text-white text-xs font-bold rounded px-2 py-0.5">GRATIS</span>
+                </a>
+                <a class="hover:underline" href="#">Moda</a>
+                <a class="hover:underline" href="{{ url_for('productos.index') }}">Vender</a>
+                <a class="hover:underline" href="#">Ayuda</a>
+                <a class="hover:underline" href="#">Crea tu cuenta</a>
+                <a class="hover:underline" href="#">Ingresa</a>
+                <a class="hover:underline" href="#">Mis compras</a>
+                <a aria-label="Carrito de compras" class="hover:underline" href="#">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Banner principal -->
+    <main class="relative bg-gradient-to-b from-blue-400 to-blue-300">
+        <div class="container mx-auto px-4 pt-8 pb-24">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <!-- Imagen -->
+                <div class="md:w-2/5">
+                    <img alt="Hombre sonriente con logo de Mercado Libre" 
+                         class="w-full max-w-md mx-auto md:max-w-none object-contain transition-transform hover:scale-105"
+                         src="https://storage.googleapis.com/a1aa/image/3540f554-1f09-4a71-708f-e3965256bb4a.jpg "/>
+                </div>
+                
+                <!-- Texto -->
+                <div class="md:w-3/5 text-center md:text-left">
+                    <h1 class="font-extrabold text-4xl md:text-5xl text-gray-900 uppercase tracking-tight">
+                        ENVÍO GRATIS
+                    </h1>
+                    <h2 class="font-extrabold text-2xl md:text-3xl text-gray-900 uppercase mt-2">
+                        EN TU<strong class="text-blue-600"> PRIMERA COMPRA</strong>
+                    </h2>
+                    
+                    <button class="mt-6 bg-gradient-to-b from-gray-900 to-gray-700 text-white font-semibold uppercase rounded 
+                              px-6 py-3 flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow mx-auto md:mx-0">
+                        EXCLUSIVO EN <strong>APP</strong> <i class="fas fa-mobile-alt text-xl"></i>
+                    </button>
+                    
+                    <p class="text-xs text-gray-900 mt-4 max-w-md mx-auto md:mx-0">
+                        Hasta el 31/12/25. Ver más en 
+                        <a class="underline hover:text-blue-600 transition-colors" 
+                           href="https://www.mercadolibre.com.co/ayuda/28939 " 
+                           target="_blank" rel="noopener noreferrer">
+                            https://www.mercadolibre.com.co/ayuda/28939 
+                        </a>
+                    </p>
+                    
+                    <!-- Indicadores -->
+                    <div class="flex justify-center md:justify-start mt-4 space-x-1 text-gray-900 text-sm">
+                        <span class="w-2 h-2 rounded-full bg-gray-900 opacity-50"></span>
+                        <span class="w-2 h-2 rounded-full bg-gray-900 opacity-50"></span>
+                        <span class="w-2 h-2 rounded-full bg-gray-900 opacity-50"></span>
+                        <span class="w-2 h-2 rounded-full bg-gray-900 opacity-50"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flechas del carrusel -->
+            <div class="absolute top-1/2 left-0 -translate-y-1/2 transform z-10">
+                <button aria-label="Anterior" class="bg-white rounded-full w-12 h-12 flex items-center justify-center 
+                          shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all mx-2">
+                    <i class="fas fa-chevron-left text-blue-600 text-xl"></i>
+                </button>
+            </div>
+            <div class="absolute top-1/2 right-0 -translate-y-1/2 transform z-10">
+                <button aria-label="Siguiente" class="bg-white rounded-full w-12 h-12 flex items-center justify-center 
+                          shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all mx-2">
+                    <i class="fas fa-chevron-right text-blue-600 text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sección de tarjetas -->
+    <section class="container mx-auto px-4 -mt-20 mb-16 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+            <!-- Tarjeta modelo -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Ingresa a tu cuenta</h3>
+                <img alt="Icono de usuario" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/5edea430-44c4-4c76-bbb7-259ca350d43e.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Disfruta de ofertas y compra sin límites.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Ingresar a tu cuenta
+                </button>
+            </article>
+
+            <!-- Repite las otras 5 tarjetas con la misma estructura -->
+            <!-- Tarjeta 2 -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Ingresa tu ubicación</h3>
+                <img alt="Icono de mapa" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/293be3e2-4cf3-4121-05ef-3223c3720dcc.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Consulta costos y tiempos de entrega.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Ingresar ubicación
+                </button>
+            </article>
+
+            <!-- Tarjeta 3 -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Medios de pago</h3>
+                <img alt="Icono de cartera" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/ed867e9b-d728-494b-61bc-cc95fdfad29d.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Paga tus compras de forma rápida y segura.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Conocer medios de pago
+                </button>
+            </article>
+
+            <!-- Tarjeta 4 -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Menos de <strong>$40.000</strong></h3>
+                <img alt="Icono de moneda" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/a977e6c2-1799-45c1-7f81-ca1963557c0f.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Descubre productos con precios bajos.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Mostrar productos
+                </button>
+            </article>
+
+            <!-- Tarjeta 5 -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Más vendidos</h3>
+                <img alt="Icono de compras" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/b5d40b07-440e-417e-652b-9353db625325.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Explora los productos que son tendencia.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Ir a Más vendidos
+                </button>
+            </article>
+
+            <!-- Tarjeta 6 -->
+            <article class="bg-white rounded-lg shadow-md p-5 flex flex-col items-center text-center 
+                         hover:shadow-lg transition-shadow duration-300">
+                <h3 class="font-semibold text-sm mb-3">Compra protegida</h3>
+                <img alt="Icono de paquete" class="mb-3 h-20 w-20 object-contain" 
+                     src="https://storage.googleapis.com/a1aa/image/a1938716-d0f4-46e6-4631-ceeb8a60c301.jpg "/>
+                <p class="text-xs text-gray-600 mb-4">Puedes devolver tu compra gratis.</p>
+                <button class="bg-blue-200 text-blue-600 text-xs font-semibold rounded px-4 py-1.5 
+                          hover:bg-blue-300 transition-colors">
+                    Cómo funciona
+                </button>
+            </article>
+        </div>
+    </section>
+</body>
+</html>
